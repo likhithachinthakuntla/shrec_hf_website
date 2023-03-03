@@ -1,0 +1,22 @@
+.box-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-image: url('../../assets/images/Background.png');
+  min-height: 100vh;
+  background-size: cover;
+}
+
+.card-container {
+  min-width: 90%;
+  border-radius: 2px;
+  padding: 1px;
+  margin-top: 10px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: white;
+}
