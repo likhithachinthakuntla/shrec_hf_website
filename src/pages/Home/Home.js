@@ -1,8 +1,8 @@
 import { Button, IconButton } from '@mui/material';
 import React, { useState } from 'react';
-import './Home.css';
-import { CgAdd } from "react-icons/cg";
+import { CgAdd } from 'react-icons/cg';
 import Popup from '../../components/Popup/Popup';
+import './Home.css';
 import '../../components/Popup/Popup.css';
 
 const Home = () => {
@@ -21,18 +21,27 @@ const Home = () => {
         <div className='card-style'>
           <div>
             <h1 className='project'>Projects</h1>
-            <IconButton aria-label="Add project" size="medium" style={{ paddingBlockStart: "0px" }} onClick={handleClick}>
-              <CgAdd fontSize="inherit" />
+            <IconButton
+              aria-label='Add project'
+              size='medium'
+              style={{ paddingBlockStart: '0px' }}
+              onClick={handleClick}
+            >
+              <CgAdd fontSize='inherit' />
             </IconButton>
           </div>
           <div className='create-project'>
             <p className='project-status'>No projects available!</p>
-            <Button variant='contained' style={{display: "block", margin: "0 auto"}} onClick={handleClick}>
+            <Button
+              variant='contained'
+              style={{ display: 'block', margin: '0 auto' }}
+              onClick={handleClick}
+            >
               Create New Project
             </Button>
             <div>
               {showPopup && (
-                <div className="popup-background">
+                <div className='popup-background'>
                   <Popup onClose={handleClose} />
                 </div>
               )}

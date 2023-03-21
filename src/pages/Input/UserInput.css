@@ -6,6 +6,7 @@
   background-image: url('../../assets/images/Background.png');
   min-height: 100vh;
   background-size: cover;
+  padding-bottom: 5rem;
 }
 
 .card-container {
@@ -18,7 +19,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: white;
+  background: rgb(244, 173, 73);
 }
 
 .dropdown-pos {

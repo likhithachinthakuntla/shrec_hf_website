@@ -11,6 +11,7 @@ import {
   StepButton,
 } from '@mui/material';
 import Dropdown from '../../components/Dropdown/dropdown';
+import HFM from '../../assets/images/Flow_Chart.png';
 import './UserInput.css';
 
 const steps = [
@@ -59,6 +60,7 @@ const UserInput = () => {
   const [activeStep, setActiveStep] = useState(1);
   const [completed, setCompleted] = useState(false);
 
+  const [submitClicked, setSubmitClicked] = useState(false);
   const totalSteps = () => {
     return steps.length;
   };
@@ -67,16 +69,32 @@ const UserInput = () => {
     return activeStep === totalSteps();
   };
 
-  const handleNext = () => {
+  const proceed = () => {
     if (isLastStep()) {
       setCompleted(true);
-      return toggleChartVisibility((chartVisible) => !chartVisible);
     }
+    if (submitClicked) {
+      setSubmitClicked(true);
+    } else {
+      setSubmitClicked(false);
+    }
+  };
+
+  const handleNext = () => {
+    // debugger;
+    // if (isLastStep()) {
+    //   setCompleted(true);
+    //   return toggleChartVisibility((chartVisible) => !chartVisible);
+    // }
     const newActiveStep = activeStep + 1;
     setActiveStep(newActiveStep);
   };
 
   const handleBack = () => {
+    // debugger;
+    if (isLastStep()) {
+      setCompleted(false);
+    }
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
@@ -98,57 +116,82 @@ const UserInput = () => {
           ))}
         </Stepper>
 
+        {submitClicked == false && (
+          <Fragment>
+            {renderStep()}
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              {activeStep > 1 && (
+                <Button
+                  color='inherit'
+                  onClick={handleBack}
+                  sx={{ mr: 1 }}
+                  variant='outlined'
+                >
+                  Back
+                </Button>
+              )}
+              <Box sx={{ flex: '1 1 auto' }} />
+              {activeStep < 3 && (
+                <Button onClick={handleNext} sx={{ mr: 1 }} variant='contained'>
+                  Next
+                </Button>
+              )}
+            </Box>
+          </Fragment>
+        )}
+
         <Fragment>
-          {renderStep()}
-
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            {activeStep > 1 && (
-              <Button
-                color='inherit'
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-                variant='outlined'
+          {activeStep >= 3 && (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  pt: 2,
+                  justifyContent: 'center',
+                }}
               >
-                Back
-              </Button>
-            )}
-            <Box sx={{ flex: '1 1 auto' }} />
-
-            <Button onClick={handleNext} sx={{ mr: 1 }} variant='contained'>
-              {activeStep === 3 ? 'Proceed' : 'Next'}
-            </Button>
-          </Box>
+                <Button onClick={proceed} sx={{ mr: 1 }} variant='contained'>
+                  Submit
+                </Button>
+              </Box>
+            </>
+          )}
         </Fragment>
       </Box>
     );
   };
 
-  // Not being used rn
   const renderFinalStep = () => {
     return (
       <>
-        <Grid container justifyContent='center' spacing={4} mt={2} mb={4}>
+        <Grid
+          container
+          justifyContent='center'
+          alignItems='center'
+          spacing={2}
+          mt={2}
+          mb={4}
+        >
           {Object.entries({
             0: 'Dataset',
             1: 'Model Training',
             2: 'Training Framework',
             3: 'Infrastructure',
           }).map(([key, value]) => (
-            <Grid item key={key}>
+            <Grid item key={key} xs={6} className='align-center'>
               <Dropdown placeholder={value} options={ip[key]} />
             </Grid>
           ))}
         </Grid>
-
-        <Button variant='contained' onClick={analyseData}>
-          Proceed
-        </Button>
       </>
     );
   };
 
   const renderStep = () => {
     if (completed) return renderFinalStep();
+    // debugger;
     switch (activeStep) {
       case 1:
         return renderStep1();
@@ -203,6 +246,12 @@ const UserInput = () => {
 
         <CardContent className='align-center card-content'>
           {renderStepProgressComponent()}
+        </CardContent>
+      </Card>
+
+      <Card className='card-container'>
+        <CardContent>
+          <img src={HFM} height='300' width='900' />
         </CardContent>
       </Card>
     </Box>

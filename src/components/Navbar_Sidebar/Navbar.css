@@ -11,7 +11,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
 }
 
 .navbar-brand {
@@ -19,10 +18,10 @@
 }
 
 .menu-bars {
-  margin-left: 2rem;
   font-size: 2rem;
   background: none;
   margin-right: auto;
+  margin-left: 2rem;
 }
 
 .nav-menu {
@@ -41,6 +40,10 @@
   left: 0;
   transition: 350ms;
   z-index: 999;
+}
+
+.nav-menu ul {
+  padding-left: 0rem;
 }
 
 .nav-text {
