@@ -56,8 +56,8 @@ function Dashboard() {
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
-                      <p className='card-category'>Number</p>
-                      <Card.Title as='h4'>150GB</Card.Title>
+                      <p className='card-category'></p>
+                      <Card.Title as='h4'>Yelp Reviews</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -66,7 +66,7 @@ function Dashboard() {
                 <hr></hr>
                 <div className='stats'>
                   <i className='fas fa-redo mr-1'></i>
-                  Update Now
+                  Dataset
                 </div>
               </Card.Footer>
             </Card>
@@ -85,8 +85,8 @@ function Dashboard() {
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
-                      <p className='card-category'>Revenue</p>
-                      <Card.Title as='h4'>$ 1,345</Card.Title>
+                      <p className='card-category'></p>
+                      <Card.Title as='h4'>50GB</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -95,7 +95,7 @@ function Dashboard() {
                 <hr></hr>
                 <div className='stats'>
                   <i className='far fa-calendar-alt mr-1'></i>
-                  Last day
+                  Size
                 </div>
               </Card.Footer>
             </Card>
@@ -114,8 +114,8 @@ function Dashboard() {
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
-                      <p className='card-category'>Errors</p>
-                      <Card.Title as='h4'>23</Card.Title>
+                      <p className='card-category'></p>
+                      <Card.Title as='h4'>23504</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -124,7 +124,7 @@ function Dashboard() {
                 <hr></hr>
                 <div className='stats'>
                   <i className='far fa-clock-o mr-1'></i>
-                  In the last hour
+                  Number of records
                 </div>
               </Card.Footer>
             </Card>
@@ -140,8 +140,8 @@ function Dashboard() {
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
-                      <p className='card-category'>Followers</p>
-                      <Card.Title as='h4'>+45K</Card.Title>
+                      <p className='card-category'></p>
+                      <Card.Title as='h4'>Supervised</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -150,7 +150,7 @@ function Dashboard() {
                 <hr></hr>
                 <div className='stats'>
                   <i className='fas fa-redo mr-1'></i>
-                  Update now
+                  Type of classification
                 </div>
               </Card.Footer>
             </Card>
@@ -163,8 +163,8 @@ function Dashboard() {
           <Col md='8'>
             <Card>
               <Card.Header>
-                <Card.Title as='h4'>Users Behavior</Card.Title>
-                <p className='card-category'>24 Hours performance</p>
+                <Card.Title as='h4'>Feature importances</Card.Title>
+                <p className='card-category'></p>
               </Card.Header>
               <Card.Body>
                 <div>
@@ -207,8 +207,8 @@ function Dashboard() {
           <Col md='4'>
             <Card>
               <Card.Header>
-                <Card.Title as='h4'>Email Statistics</Card.Title>
-                <p className='card-category'>Last Campaign Performance</p>
+                <Card.Title as='h4'>Number of occurrences</Card.Title>
+                <p className='card-category'></p>
               </Card.Header>
               <Card.Body>
                 <div

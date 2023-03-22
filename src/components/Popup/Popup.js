@@ -3,12 +3,18 @@ import React from 'react';
 import { IoCloseSharp } from 'react-icons/io5';
 import '../../pages/Dashboard/scss/light-bootstrap-dashboard-react.scss?v=2.0.0';
 import './Popup.css';
+import { useNavigate } from "react-router-dom";
 
 function Popup(props) {
   const { onClose } = props;
+  const navigate = useNavigate();
+  
+  const userInputsPage = () => {
+      navigate('/userInputs');
+  }
   return (
     <div className='popup'>
-      <h2 style={{ float: 'left' }}>Create a Project</h2>
+      <h2 style={{ float: 'left' , fontSize: '30px'}}>Create a Project</h2>
       <div style={{ paddingTop: '10px', marginRight: '-20px' }}>
         <IconButton
           aria-label='Close'
@@ -35,7 +41,7 @@ function Popup(props) {
           </option>
         </select>
       </form>
-      <Button variant='contained' onClick={onClose} style={{ float: 'right' }}>
+      <Button variant='contained' onClick={() => userInputsPage()} style={{ float: 'right' }}>
         SUBMIT
       </Button>
     </div>

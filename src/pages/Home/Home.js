@@ -20,7 +20,7 @@ const Home = () => {
       <div className='box-style'>
         <div className='card-style'>
           <div>
-            <h1 className='project'>Projects</h1>
+            <h1 style={{fontSize: '36px'}} className='project'>Projects</h1>
             <IconButton
               aria-label='Add project'
               size='medium'
@@ -31,7 +31,8 @@ const Home = () => {
             </IconButton>
           </div>
           <div className='create-project'>
-            <p className='project-status'>No projects available!</p>
+            <p className='project-status-data'>Oops!</p>
+            <p className='project-status'>No projects available</p>
             <Button
               variant='contained'
               style={{ display: 'block', margin: '0 auto' }}

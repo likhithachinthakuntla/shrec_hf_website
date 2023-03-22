@@ -13,6 +13,7 @@ import {
 import Dropdown from '../../components/Dropdown/dropdown';
 import HFM from '../../assets/images/Flow_Chart.png';
 import './UserInput.css';
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   'Select Dataset',
@@ -21,6 +22,7 @@ const steps = [
 ];
 
 const UserInput = () => {
+  const navigate = useNavigate();
   const analyseData = () => {};
 
   const [etlData, setEtlData] = useState(['Yelp Reviews']);
@@ -72,6 +74,9 @@ const UserInput = () => {
   const proceed = () => {
     if (isLastStep()) {
       setCompleted(true);
+      if(completed) {
+        navigate('/etl');
+      }
     }
     if (submitClicked) {
       setSubmitClicked(true);
