@@ -14,13 +14,56 @@ import {
   Col,
   Form,
   OverlayTrigger,
-  Tooltip,
 } from 'react-bootstrap';
 import { VictoryChart, VictoryScatter, VictoryZoomContainer } from 'victory';
-
+import { Chart as ChartJS } from 'chart.js/auto';
+import { Bar } from 'react-chartjs-2';
 import './Dashboard.css';
 
 function Dashboard() {
+  const options = {
+    indexAxis: 'y',
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'right',
+      },
+      title: {
+        display: true,
+        text: 'Yelp Movies Rating',
+      },
+    },
+  };
+
+  const dataHorBar = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    datasets: [
+      {
+        label: 'My First dataset',
+        backgroundColor: '#EC932F',
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 1,
+        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+        hoverBorderColor: 'rgba(255,99,132,1)',
+        data: [65, 59, 80, 81, 56, 55, 40],
+      },
+      {
+        label: 'My First dataset 2',
+        backgroundColor: 'rgba(255,99,132,0.2)',
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 1,
+        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+        hoverBorderColor: 'rgba(255,99,132,1)',
+        data: [65, 59, 80, 81, 56, 55, 40],
+      },
+    ],
+  };
+
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -40,6 +83,27 @@ function Dashboard() {
   };
 
   const data = getScatterData();
+
+  const data1 = {
+    labels: [
+      'You',
+      'The Order',
+      'Hangover Series',
+      'Lord Of The Rings',
+      'Batman Begins',
+      'Iron Man 2',
+      'The Whale',
+    ],
+    datasets: [
+      {
+        label: 'Rating',
+        data: [2, 5, 6, 9, 10, 6, 8],
+        fill: true,
+        backgroundColor: 'rgba(6, 156,51, .3)',
+        borderColor: '#02b844',
+      },
+    ],
+  };
 
   return (
     <>
@@ -168,7 +232,7 @@ function Dashboard() {
               </Card.Header>
               <Card.Body>
                 <div>
-                  <VictoryChart
+                  {/* <VictoryChart
                     domain={{ y: [0, 100] }}
                     containerComponent={
                       <VictoryZoomContainer
@@ -186,16 +250,17 @@ function Dashboard() {
                         },
                       }}
                     />
-                  </VictoryChart>
+                  </VictoryChart> */}
+                  <Bar options={options} data={data1} />
                 </div>
               </Card.Body>
               <Card.Footer>
-                <div className='legend'>
+                {/* <div className='legend'>
                   <i className='fas fa-circle text-info'></i>
                   Open <i className='fas fa-circle text-danger'></i>
                   Click <i className='fas fa-circle text-warning'></i>
                   Click Second Time
-                </div>
+                </div> */}
                 <hr></hr>
                 <div className='stats'>
                   <i className='fas fa-history'></i>
@@ -204,39 +269,17 @@ function Dashboard() {
               </Card.Footer>
             </Card>
           </Col>
-          <Col md='4'>
+          {/* <Col md='4'>
             <Card>
               <Card.Header>
                 <Card.Title as='h4'>Number of occurrences</Card.Title>
                 <p className='card-category'></p>
               </Card.Header>
               <Card.Body>
-                <div
-                  className='ct-chart ct-perfect-fourth'
-                  id='chartPreferences'
-                >
-                  {/* <ChartistGraph
-                    data={{
-                      labels: ['40%', '20%', '40%'],
-                      series: [40, 20, 40],
-                    }}
-                    type='Pie'
-                  /> */}
-                </div>
-                <div className='legend'>
-                  <i className='fas fa-circle text-info'></i>
-                  Open <i className='fas fa-circle text-danger'></i>
-                  Bounce <i className='fas fa-circle text-warning'></i>
-                  Unsubscribe
-                </div>
-                <hr></hr>
-                <div className='stats'>
-                  <i className='far fa-clock'></i>
-                  Campaign sent 2 days ago
-                </div>
+                <Bar options={options} data={data1} />
               </Card.Body>
             </Card>
-          </Col>
+          </Col> */}
         </Row>
       </Container>
     </>
