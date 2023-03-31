@@ -39,6 +39,9 @@ function Popup(props) {
           <option value='textClassification(Multi-class)'>
             Text Classification (Multi-class)
           </option>
+          <option value='videoClassification'>
+            Video Classification
+          </option>
         </select>
       </form>
       <Button variant='contained' onClick={() => userInputsPage()} style={{ float: 'right' }}>
