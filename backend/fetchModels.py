@@ -35,12 +35,12 @@ class FetchModels:
     """
     Categorize Models for selected Dataset.
     """
-    def showModelsForDataset(self):
+    def showModelsForDataset(self, dataset):
         api = HfApi()
         filt =ModelFilter(
                             task="text-classification",
                             library="tf",
-                            trained_dataset=self.datasetID
+                            trained_dataset=dataset
                         )
         models = api.list_models(filter=filt)
         self.debug_print(len(models))
@@ -55,7 +55,7 @@ class FetchModels:
     def showModelByCategory(self, filters):
         api = HfApi()
         filt = ModelFilter(
-            tags = filters['license']
+            task = filters['task']
         )
         models = api.list_models(filter=filt)
         self.debug_print(len(models))
@@ -67,9 +67,12 @@ class FetchModels:
 
 if __name__ == '__main__':
     ds = FetchModels('yelp_review_full', None, logger=None)
-    # ds.showAllModels()
-    # ds.debug_print("\n +++++++++++ \n")
-    # ds.showModelsForDataset()
+    ds.showAllModels()
+    ds.debug_print("\n +++++++++++ \n")
+    ds.showModelsForDataset('yelp_review_full')
+    ds.debug_print("\n +++++++++++ \n")
     ds.viewModelInfo('tokenizethathug/1percent_bert_base_uncased_100k')
-    # ds.showModelByCategory({'license':"mit"})
+    ds.debug_print("\n +++++++++++ \n")
+    ds.showModelByCategory({'task':"text-classification"})
+    ds.debug_print("\n +++++++++++ \n")
     #['license', 'library', 'task'],['mit',['pytorch', 'tf'], 'text-classification']
