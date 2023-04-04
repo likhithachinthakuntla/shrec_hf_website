@@ -4,6 +4,10 @@
   text-decoration: underline;
 }
 
+.project-title {
+  padding-bottom: 60px;
+}
+
 .box-style {
   flex-direction: column;
   justify-content: flex-start;
@@ -28,13 +32,14 @@
 }
 
 .create-project {
-  padding-top: 150px;
-}
+  padding-top: 50px;
+} 
 
 .project-status {
   display: block;
   text-align: center;
   padding-bottom: 50px;
+  padding-top: 40px;
   font-weight: bold;
 }
 

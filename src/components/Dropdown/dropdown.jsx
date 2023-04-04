@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Select, { components } from 'react-select';
 
-export default ({ placeholder, options, labelKey, valueKey, value }) => {
+export default ({ placeholder, options, id, handleSelectedData, selectedOption, labelKey, valueKey }) => {
   const { ValueContainer, Placeholder } = components;
 
   const CustomValueContainer = ({ children, ...props }) => {
@@ -23,7 +23,7 @@ export default ({ placeholder, options, labelKey, valueKey, value }) => {
       ...defaultStyles,
       minWidth: 200,
       maxWidth: 300,
-      backgroundColor: '#102123',
+      backgroundColor: 'white',
     }),
     menu: ({ ...css }) => ({
       ...css,
@@ -41,10 +41,17 @@ export default ({ placeholder, options, labelKey, valueKey, value }) => {
     }),
     singleValue: (defaultStyles) => ({
       ...defaultStyles,
-      color: 'white',
+      color: 'black',
       height: '30px',
       display: 'flex',
       justifyContent: 'center',
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      fontSize: '15px',
+      top: '3.5px',
+      marginLeft: '4px',
+      overflow: 'visible',
     }),
     valueContainer: (base) => ({
       ...base,
@@ -68,20 +75,45 @@ export default ({ placeholder, options, labelKey, valueKey, value }) => {
 
   return (
     <>
-      <Select
+      <div>{selectedOption.value=='' && (<Select
         className='basic-single'
         classNamePrefix='select'
         isLoading={false}
-        isClearable={true}
+        // isClearable={true}
         isSearchable={true}
         isDisabled={false}
         options={options}
         placeholder={placeholder}
         styles={styles}
-        labelKey={labelKey}
-        valueKey={valueKey}
-        components={{ ValueContainer: CustomValueContainer }}
+        // labelKey={labelKey}
+        // valueKey={valueKey}
+        // value={selectedOption}
+        onChange={(event) => handleSelectedData(id,event)}
+        id={id}
+        components={{ValueContainer: CustomValueContainer}}
+      />)}{
+        selectedOption.value != '' &&
+        (
+        <Select
+        className='basic-single'
+        classNamePrefix='select'
+        isLoading={false}
+        // isClearable={true}
+        isSearchable={true}
+        isDisabled={false}
+        options={options}
+        placeholder={placeholder}
+        styles={styles}
+        // labelKey={labelKey}
+        // valueKey={valueKey}
+        value={selectedOption}
+        onChange={(event) => handleSelectedData(id,event)}
+        id={id}
+        components={{ValueContainer: CustomValueContainer}}
       />
+      )
+      }
+      </div>
     </>
   );
 };

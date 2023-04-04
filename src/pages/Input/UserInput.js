@@ -54,6 +54,11 @@ const UserInput = () => {
     return { value: item, label: item };
   });
 
+  const [selectedEtlData, setSelectedEtlData] = useState({label: '', value:''});
+  const [selectedModelTrainingData, setSelectedModelTrainingData] = useState({label: '', value:''});
+  const [selectedTrainingFrameworkData, setSelectedTrainingFrameworkData] = useState({label: '', value:''});
+  const [selectedInfrastructureData, setSelectedInfrastructureData] = useState({label: '', value:''});
+
   const [isChartVisible, toggleChartVisibility] = useState(false);
 
   const [activeStep, setActiveStep] = useState(1);
@@ -68,10 +73,24 @@ const UserInput = () => {
     return activeStep === totalSteps();
   };
 
+  // const [selectedDropdownListArray, setSelectedDropdownListArray] = useState([]);
+
   const proceed = () => {
     if (isLastStep()) {
       setCompleted(true);
-      if (completed) {
+      if(completed) {
+        const selectedDropdownList = [];
+        selectedDropdownList.push(getSelectedData(0));
+        selectedDropdownList.push(getSelectedData(1));
+        selectedDropdownList.push(getSelectedData(2));
+        selectedDropdownList.push(getSelectedData(3));
+        // const dropdownArray = selectedDropdownListArray;
+        // dropdownArray.push(selectedDropdownList);
+        // setSelectedDropdownListArray(dropdownArray);
+        if(window.dropdownArray == undefined) {
+          window.dropdownArray = {};
+        }
+        window.dropdownArray[window.projectName] = selectedDropdownList;
         navigate('/etl');
       }
     }
@@ -81,6 +100,30 @@ const UserInput = () => {
       setSubmitClicked(false);
     }
   };
+
+  const handleSelectedData = (id, eventData) => {
+    if(id==0) {
+        setSelectedEtlData(eventData);
+    } else if (id==1) {
+        setSelectedModelTrainingData(eventData);
+    } else if (id==2) {
+      setSelectedTrainingFrameworkData(eventData);
+    } else if (id==3) {
+      setSelectedInfrastructureData(eventData);
+    }
+  }
+
+  const getSelectedData = (key) => {
+    if(key==0) {
+      return selectedEtlData;
+  } else if (key==1) {
+    return selectedModelTrainingData;
+  } else if (key==2) {
+    return selectedTrainingFrameworkData;
+  } else if (key==3) {
+    return selectedInfrastructureData;
+  }
+  }
 
   const handleNext = () => {
     // debugger;
@@ -183,7 +226,7 @@ const UserInput = () => {
             3: 'Infrastructure',
           }).map(([key, value]) => (
             <Grid item key={key} xs={6} marginY={1} className='align-center'>
-              <Dropdown placeholder={value} options={ip[key]} />
+              <Dropdown placeholder={value} options={ip[key]} id={key} handleSelectedData={handleSelectedData} selectedOption={getSelectedData(key)} />
             </Grid>
           ))}
         </Grid>
@@ -209,7 +252,7 @@ const UserInput = () => {
   const renderStep1 = () => {
     return (
       <Grid className='dropdown-pos' marginY={4} ml={4}>
-        <Dropdown placeholder='Dataset' options={ip[0]} />
+        <Dropdown placeholder='Dataset' options={ip[0]} id={0} handleSelectedData={handleSelectedData} selectedOption={selectedEtlData} />
       </Grid>
     );
   };
@@ -224,8 +267,8 @@ const UserInput = () => {
           marginY={4}
           ml={4}
         >
-          <Dropdown placeholder='Model Training' options={ip[1]} />
-          <Dropdown placeholder='Training Framework' options={ip[2]} />
+          <Dropdown placeholder='Model Training' options={ip[1]} id={1} handleSelectedData={handleSelectedData} selectedOption={selectedModelTrainingData} />
+          <Dropdown placeholder='Training Framework' options={ip[2]} id={2} handleSelectedData={handleSelectedData} selectedOption={selectedTrainingFrameworkData} />
         </Stack>
       </>
     );
@@ -234,7 +277,7 @@ const UserInput = () => {
   const renderStep3 = () => {
     return (
       <Grid className='dropdown-pos' marginY={4} ml={4}>
-        <Dropdown placeholder='Infrastructure' options={ip[3]} />
+        <Dropdown placeholder='Infrastructure' options={ip[3]} id={3} handleSelectedData={handleSelectedData} selectedOption={selectedInfrastructureData} />
       </Grid>
     );
   };

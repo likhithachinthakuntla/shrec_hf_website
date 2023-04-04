@@ -1,5 +1,5 @@
 import { Button, IconButton } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { IoCloseSharp } from 'react-icons/io5';
 import '../../pages/Dashboard/scss/light-bootstrap-dashboard-react.scss?v=2.0.0';
 import './Popup.css';
@@ -12,6 +12,14 @@ function Popup(props) {
   const userInputsPage = () => {
       navigate('/userInputs');
   }
+
+  const [inputValue, setInputValue] = useState('');
+
+  function handleInputChange(event) {
+    setInputValue(event.target.value);
+    window.projectName = event.target.value;
+  }
+
   return (
     <div className='popup'>
       <h2 style={{ float: 'left' , fontSize: '30px'}}>Create a Project</h2>
@@ -31,16 +39,18 @@ function Popup(props) {
           type='text'
           required
           placeholder='Enter new project name'
+          value={inputValue}
+          onChange={handleInputChange}
         ></input>
         <select id='select'>
-          <option value='textClassification(Binary)'>
-            Text Classification (Binary)
-          </option>
-          <option value='textClassification(Multi-class)'>
-            Text Classification (Multi-class)
+          <option value='objectDetection'>
+            Object Detection
           </option>
           <option value='videoClassification'>
             Video Classification
+          </option>
+          <option value='textClassification(Multi-class)'>
+            Text Classification (Multi-class)
           </option>
         </select>
       </form>
