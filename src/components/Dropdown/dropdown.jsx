@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Select, { components } from 'react-select';
 
-export default ({ placeholder, options, labelKey, valueKey, value }) => {
+export default ({ placeholder, options, id, handleSelectedData, selectedOption, labelKey, valueKey }) => {
   const { ValueContainer, Placeholder } = components;
 
   const CustomValueContainer = ({ children, ...props }) => {
@@ -68,20 +68,56 @@ export default ({ placeholder, options, labelKey, valueKey, value }) => {
 
   return (
     <>
-      <Select
+      <div>{selectedOption.value=='' && (<Select
         className='basic-single'
         classNamePrefix='select'
         isLoading={false}
-        isClearable={true}
+        // isClearable={true}
         isSearchable={true}
         isDisabled={false}
         options={options}
         placeholder={placeholder}
         styles={styles}
-        labelKey={labelKey}
-        valueKey={valueKey}
-        components={{ ValueContainer: CustomValueContainer }}
+        // labelKey={labelKey}
+        // valueKey={valueKey}
+        // value={selectedOption}
+        onChange={(event) => handleSelectedData(id,event)}
+        id={id}
+        // components={{ValueContainer: CustomValueContainer}}
+      />)}{
+        selectedOption.value != '' &&
+        (
+        <Select
+        className='basic-single'
+        classNamePrefix='select'
+        isLoading={false}
+        // isClearable={true}
+        isSearchable={true}
+        isDisabled={false}
+        options={options}
+        placeholder={placeholder}
+        styles={styles}
+        // labelKey={labelKey}
+        // valueKey={valueKey}
+        value={selectedOption}
+        onChange={(event) => handleSelectedData(id,event)}
+        id={id}
+        // components={{ValueContainer: CustomValueContainer}}
       />
+      )
+      }
+      </div>
+
+      {/* <div
+        style={{
+          color: 'hsl(0, 0%, 40%)',
+          display: 'inline-block',
+          fontSize: 12,
+          fontStyle: 'italic',
+          marginTop: '1em',
+        }}
+      >
+      </div> */}
     </>
   );
 };
