@@ -1,68 +1,34 @@
-import React from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './scss/light-bootstrap-dashboard-react.scss?v=2.0.0';
+import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 
-import {
-  Badge,
-  Button,
-  Card,
-  Navbar,
-  Nav,
-  Table,
-  Container,
-  Row,
-  Col,
-  Form,
-  OverlayTrigger,
-} from 'react-bootstrap';
 import { VictoryChart, VictoryScatter, VictoryZoomContainer } from 'victory';
 import { Chart as ChartJS } from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
+import MaterialTable from 'material-table';
+import { ThemeProvider, createTheme } from '@mui/material';
 import './Dashboard.css';
+import tableIcons from './MaterialTableIcons';
 
 function Dashboard() {
-  const options = {
-    indexAxis: 'y',
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'right',
-      },
-      title: {
-        display: true,
-        text: 'Yelp Movies Rating',
-      },
-    },
-  };
+  useEffect(() => {
+    // Fetch Data to be populated in the table
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((resp) => resp.json())
+      .then((resp) => {
+        console.log(resp);
+        setTableData(resp);
+      });
 
-  const dataHorBar = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: 'My First dataset',
-        backgroundColor: '#EC932F',
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [65, 59, 80, 81, 56, 55, 40],
-      },
-      {
-        label: 'My First dataset 2',
-        backgroundColor: 'rgba(255,99,132,0.2)',
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [65, 59, 80, 81, 56, 55, 40],
-      },
-    ],
-  };
+    // Fetch Data to be populated in the horizontal bar-chart
+    fetch('https://dummyjson.com/products/?limit=10')
+      .then((chartRes) => chartRes.json())
+      .then((chartRes) => {
+        console.log(chartRes);
+        setBarChartData(chartRes.products);
+      });
+  }, []);
 
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
@@ -84,26 +50,80 @@ function Dashboard() {
 
   const data = getScatterData();
 
+  // ------------------------------------------------------------
+  // HORIZONTAL BAR CHART
+  // ------------------------------------------------------------
+  let ref = useRef(null);
+
+  const options = {
+    indexAxis: 'y',
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'right',
+      },
+      title: {
+        display: true,
+        text: 'Yelp Movies Rating',
+      },
+    },
+  };
+
+  const [barChartData, setBarChartData] = useState([]);
+
   const data1 = {
-    labels: [
-      'You',
-      'The Order',
-      'Hangover Series',
-      'Lord Of The Rings',
-      'Batman Begins',
-      'Iron Man 2',
-      'The Whale',
-    ],
+    labels: barChartData.map((x) => x.title),
     datasets: [
       {
-        label: 'Rating',
-        data: [2, 5, 6, 9, 10, 6, 8],
+        label: 'Price',
+        data: barChartData.map((x) => x.price),
         fill: true,
         backgroundColor: 'rgba(6, 156,51, .3)',
         borderColor: '#02b844',
       },
+      // {
+      //   label: 'Stock',
+      //   backgroundColor: 'rgba(255,99,132,0.2)',
+      //   borderColor: 'rgba(255,99,132,1)',
+      //   borderWidth: 1,
+      //   hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      //   hoverBorderColor: 'rgba(255,99,132,1)',
+      //   data: barChartData.map((x) => x.stock),
+      // },
     ],
   };
+
+  const downloadImage = useCallback(() => {
+    const link = document.createElement('a');
+    link.download = 'chart.png';
+    link.href = ref.current.toBase64Image();
+    link.click();
+  }, []);
+
+  // ------------------------------------------------------------
+  // TABLE
+  // ------------------------------------------------------------
+
+  const defaultMaterialTheme = createTheme();
+
+  const [tableData, setTableData] = useState([]);
+
+  const columns = [
+    { title: 'ID', field: 'id' },
+    { title: 'Username', field: 'username' },
+    { title: 'Name', field: 'name' },
+    { title: 'Email', field: 'email' },
+    { title: 'Phone', field: 'phone' },
+    { title: 'Web Link', field: 'website' },
+    { title: 'City', field: 'address.city' },
+  ];
+
+  // -----------------------------
 
   return (
     <>
@@ -114,14 +134,14 @@ function Dashboard() {
               <Card.Body>
                 <Row>
                   <Col xs='5'>
-                    <div className='icon-big text-center icon-warning'>
+                    <div className='icon-big icon-warning'>
                       <i className='nc-icon nc-chart text-warning'></i>
                     </div>
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
                       <p className='card-category'></p>
-                      <Card.Title as='h4'>Yelp Reviews</Card.Title>
+                      <Card.Title as='h3'>Yelp Reviews</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -143,14 +163,14 @@ function Dashboard() {
               <Card.Body>
                 <Row>
                   <Col xs='5'>
-                    <div className='icon-big text-center icon-warning'>
+                    <div className='icon-big icon-warning'>
                       <i className='nc-icon nc-light-3 text-success'></i>
                     </div>
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
                       <p className='card-category'></p>
-                      <Card.Title as='h4'>50GB</Card.Title>
+                      <Card.Title as='h3'>50GB</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -172,14 +192,14 @@ function Dashboard() {
               <Card.Body>
                 <Row>
                   <Col xs='5'>
-                    <div className='icon-big text-center icon-warning'>
+                    <div className='icon-big icon-warning'>
                       <i className='nc-icon nc-vector text-danger'></i>
                     </div>
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
                       <p className='card-category'></p>
-                      <Card.Title as='h4'>23504</Card.Title>
+                      <Card.Title as='h3'>23504</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -198,14 +218,14 @@ function Dashboard() {
               <Card.Body>
                 <Row>
                   <Col xs='5'>
-                    <div className='icon-big text-center icon-warning'>
+                    <div className='icon-big icon-warning'>
                       <i className='nc-icon nc-favourite-28 text-primary'></i>
                     </div>
                   </Col>
                   <Col xs='7'>
                     <div className='numbers'>
                       <p className='card-category'></p>
-                      <Card.Title as='h4'>Supervised</Card.Title>
+                      <Card.Title as='h3'>Supervised</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -223,35 +243,30 @@ function Dashboard() {
 
         {/* // --------------------------------------------------------------------------------------- */}
 
-        <Row>
-          <Col md='8'>
+        <Row className='justify-content-md-center'>
+          <Col md='12'>
             <Card>
               <Card.Header>
-                <Card.Title as='h4'>Feature importances</Card.Title>
-                <p className='card-category'></p>
+                <Container>
+                  <Row>
+                    <Col sm={8}>
+                      <Card.Title as='h4'>Feature importances</Card.Title>
+                    </Col>
+                    <Col
+                      sm={4}
+                      style={{ display: 'flex', justifyContent: 'right' }}
+                    >
+                      <Button type='button' onClick={downloadImage}>
+                        Download
+                      </Button>
+                    </Col>
+                  </Row>
+                </Container>
+                {/* <p className='card-category'></p> */}
               </Card.Header>
               <Card.Body>
-                <div>
-                  {/* <VictoryChart
-                    domain={{ y: [0, 100] }}
-                    containerComponent={
-                      <VictoryZoomContainer
-                        zoomDomain={{ x: [5, 35], y: [0, 100] }}
-                      />
-                    }
-                  >
-                    <VictoryScatter
-                      data={data}
-                      style={{
-                        data: {
-                          opacity: ({ datum }) => (datum.y % 5 === 0 ? 1 : 0.7),
-                          fill: ({ datum }) =>
-                            datum.y % 5 === 0 ? 'tomato' : 'black',
-                        },
-                      }}
-                    />
-                  </VictoryChart> */}
-                  <Bar options={options} data={data1} />
+                <div style={{ padding: '20px', width: '100%', height: '100%' }}>
+                  <Bar ref={ref} options={options} data={data1} />
                 </div>
               </Card.Body>
               <Card.Footer>
@@ -261,25 +276,36 @@ function Dashboard() {
                   Click <i className='fas fa-circle text-warning'></i>
                   Click Second Time
                 </div> */}
-                <hr></hr>
+                {/* <hr></hr>
                 <div className='stats'>
                   <i className='fas fa-history'></i>
                   Updated 3 minutes ago
-                </div>
+                </div> */}
               </Card.Footer>
             </Card>
           </Col>
-          {/* <Col md='4'>
+          {/* ---------------------------------------------------------------------------- */}
+          <Col md='12'>
             <Card>
               <Card.Header>
                 <Card.Title as='h4'>Number of occurrences</Card.Title>
                 <p className='card-category'></p>
               </Card.Header>
               <Card.Body>
-                <Bar options={options} data={data1} />
+                <ThemeProvider theme={defaultMaterialTheme}>
+                  <MaterialTable
+                    icons={tableIcons}
+                    options={{
+                      exportButton: true,
+                    }}
+                    columns={columns}
+                    data={tableData}
+                    title='Demo Title'
+                  />
+                </ThemeProvider>
               </Card.Body>
             </Card>
-          </Col> */}
+          </Col>
         </Row>
       </Container>
     </>

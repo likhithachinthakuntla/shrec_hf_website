@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Select, { components } from 'react-select';
 
-export default ({ placeholder, options, labelKey, valueKey }) => {
+export default ({ placeholder, options, labelKey, valueKey, value }) => {
   const { ValueContainer, Placeholder } = components;
 
   const CustomValueContainer = ({ children, ...props }) => {
@@ -23,7 +23,7 @@ export default ({ placeholder, options, labelKey, valueKey }) => {
       ...defaultStyles,
       minWidth: 200,
       maxWidth: 300,
-      // backgroundColor: "#102123",
+      backgroundColor: '#102123',
     }),
     menu: ({ ...css }) => ({
       ...css,
@@ -41,13 +41,28 @@ export default ({ placeholder, options, labelKey, valueKey }) => {
     }),
     singleValue: (defaultStyles) => ({
       ...defaultStyles,
-      color: 'black',
+      color: 'white',
+      height: '30px',
+      display: 'flex',
+      justifyContent: 'center',
     }),
-    placeholder: (defaultStyles) => ({
+    valueContainer: (base) => ({
+      ...base,
+      fontSize: '15px',
+      top: '3.5px',
+      marginLeft: '4px',
+      overflow: 'visible',
+    }),
+    placeholder: (base, defaultStyles) => ({
+      ...base,
       ...defaultStyles,
       minWidth: 200,
       maxWidth: 300,
-      textAlign: 'justify',
+      textAlign: 'left',
+      fontStyle: 'italic',
+      marginBottom: '65px',
+      position: 'absolute',
+      // color: 'black',
     }),
   };
 
@@ -65,19 +80,8 @@ export default ({ placeholder, options, labelKey, valueKey }) => {
         styles={styles}
         labelKey={labelKey}
         valueKey={valueKey}
-        // components={{ValueContainer: CustomValueContainer}}
+        components={{ ValueContainer: CustomValueContainer }}
       />
-
-      {/* <div
-        style={{
-          color: 'hsl(0, 0%, 40%)',
-          display: 'inline-block',
-          fontSize: 12,
-          fontStyle: 'italic',
-          marginTop: '1em',
-        }}
-      >
-      </div> */}
     </>
   );
 };
