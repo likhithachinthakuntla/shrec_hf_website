@@ -23,7 +23,7 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
       ...defaultStyles,
       minWidth: 200,
       maxWidth: 300,
-      backgroundColor: '#102123',
+      backgroundColor: 'white',
     }),
     menu: ({ ...css }) => ({
       ...css,
@@ -41,10 +41,17 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
     }),
     singleValue: (defaultStyles) => ({
       ...defaultStyles,
-      color: 'white',
+      color: 'black',
       height: '30px',
       display: 'flex',
       justifyContent: 'center',
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      fontSize: '15px',
+      top: '3.5px',
+      marginLeft: '4px',
+      overflow: 'visible',
     }),
     valueContainer: (base) => ({
       ...base,
@@ -83,7 +90,7 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
         // value={selectedOption}
         onChange={(event) => handleSelectedData(id,event)}
         id={id}
-        // components={{ValueContainer: CustomValueContainer}}
+        components={{ValueContainer: CustomValueContainer}}
       />)}{
         selectedOption.value != '' &&
         (
@@ -102,22 +109,11 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
         value={selectedOption}
         onChange={(event) => handleSelectedData(id,event)}
         id={id}
-        // components={{ValueContainer: CustomValueContainer}}
+        components={{ValueContainer: CustomValueContainer}}
       />
       )
       }
       </div>
-
-      {/* <div
-        style={{
-          color: 'hsl(0, 0%, 40%)',
-          display: 'inline-block',
-          fontSize: 12,
-          fontStyle: 'italic',
-          marginTop: '1em',
-        }}
-      >
-      </div> */}
     </>
   );
 };

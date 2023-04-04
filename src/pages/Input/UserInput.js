@@ -87,6 +87,9 @@ const UserInput = () => {
         // const dropdownArray = selectedDropdownListArray;
         // dropdownArray.push(selectedDropdownList);
         // setSelectedDropdownListArray(dropdownArray);
+        if(window.dropdownArray == undefined) {
+          window.dropdownArray = {};
+        }
         window.dropdownArray[window.projectName] = selectedDropdownList;
         navigate('/etl');
       }
@@ -222,7 +225,7 @@ const UserInput = () => {
             2: 'Training Framework',
             3: 'Infrastructure',
           }).map(([key, value]) => (
-            <Grid item key={key} xs={6} className='align-center'>
+            <Grid item key={key} xs={6} marginY={1} className='align-center'>
               <Dropdown placeholder={value} options={ip[key]} id={key} handleSelectedData={handleSelectedData} selectedOption={getSelectedData(key)} />
             </Grid>
           ))}

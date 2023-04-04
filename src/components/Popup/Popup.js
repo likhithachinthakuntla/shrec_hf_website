@@ -43,14 +43,14 @@ function Popup(props) {
           onChange={handleInputChange}
         ></input>
         <select id='select'>
-          <option value='textClassification(Binary)'>
-            Text Classification (Binary)
-          </option>
-          <option value='textClassification(Multi-class)'>
-            Text Classification (Multi-class)
+          <option value='objectDetection'>
+            Object Detection
           </option>
           <option value='videoClassification'>
             Video Classification
+          </option>
+          <option value='textClassification(Multi-class)'>
+            Text Classification (Multi-class)
           </option>
         </select>
       </form>
