@@ -13,7 +13,7 @@ import {
 import Dropdown from '../../components/Dropdown/dropdown';
 import HFM from '../../assets/images/Flow_Chart.png';
 import './UserInput.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const steps = [
   'Select Dataset',
@@ -25,19 +25,16 @@ const UserInput = () => {
   const navigate = useNavigate();
   const analyseData = () => {};
 
-  const [etlData, setEtlData] = useState(['Yelp Reviews']);
-  const [modelTrainingData, setModelTrainingData] = useState(['Bert', 'LSTM']);
-  const [trainingFrameworkData, setTrainingFrameworkData] = useState([
-    'Tensorflow',
-    'PyTorch',
-  ]);
-  const [infrastructureData, setInfrastructureData] = useState([
+  const etlData = ['Yelp Reviews'];
+  const modelTrainingData = ['Bert', 'LSTM'];
+  const trainingFrameworkData = ['Tensorflow', 'PyTorch'];
+  const infrastructureData = [
     'Sapphire Rapids CPU',
     'Ponte Vecchio GPU',
     'Arctic Sound GPU',
     'Habana Gaudi',
     'Habana Gaudi 2',
-  ]);
+  ];
 
   const ip = Array(4).fill([]);
 
@@ -74,7 +71,7 @@ const UserInput = () => {
   const proceed = () => {
     if (isLastStep()) {
       setCompleted(true);
-      if(completed) {
+      if (completed) {
         navigate('/etl');
       }
     }
@@ -185,7 +182,7 @@ const UserInput = () => {
             2: 'Training Framework',
             3: 'Infrastructure',
           }).map(([key, value]) => (
-            <Grid item key={key} xs={6} className='align-center'>
+            <Grid item key={key} xs={6} marginY={1} className='align-center'>
               <Dropdown placeholder={value} options={ip[key]} />
             </Grid>
           ))}
