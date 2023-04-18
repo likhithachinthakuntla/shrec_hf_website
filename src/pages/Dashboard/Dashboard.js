@@ -10,6 +10,7 @@ import MaterialTable from 'material-table';
 import { ThemeProvider, createTheme } from '@mui/material';
 import './Dashboard.css';
 import tableIcons from './MaterialTableIcons';
+import InProgress from '../../components/In_Progress_page/In_Progress_Page';
 
 function Dashboard() {
   useEffect(() => {
@@ -124,190 +125,198 @@ function Dashboard() {
   ];
 
   // -----------------------------
-
+  // window.showETLPage = true;
+  console.log('On Dashboard', window.showETLPage);
   return (
     <>
-      <Container fluid className='background2'>
-        <Row>
-          <Col lg='3' sm='6'>
-            <Card className='card-stats'>
-              <Card.Body>
-                <Row>
-                  <Col xs='5'>
-                    <div className='icon-big icon-warning'>
-                      <i className='nc-icon nc-chart text-warning'></i>
-                    </div>
-                  </Col>
-                  <Col xs='7'>
-                    <div className='numbers'>
-                      <p className='card-category'></p>
-                      <Card.Title as='h3'>Yelp Reviews</Card.Title>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-              <Card.Footer>
-                <hr></hr>
-                <div className='stats'>
-                  <i className='fas fa-redo mr-1'></i>
-                  Dataset
-                </div>
-              </Card.Footer>
-            </Card>
-          </Col>
+      {window.showETLPage && <InProgress></InProgress>}
 
-          {/* --------------------------------------------------------------------------------------------- */}
-
-          <Col lg='3' sm='6'>
-            <Card className='card-stats'>
-              <Card.Body>
-                <Row>
-                  <Col xs='5'>
-                    <div className='icon-big icon-warning'>
-                      <i className='nc-icon nc-light-3 text-success'></i>
-                    </div>
-                  </Col>
-                  <Col xs='7'>
-                    <div className='numbers'>
-                      <p className='card-category'></p>
-                      <Card.Title as='h3'>50GB</Card.Title>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-              <Card.Footer>
-                <hr></hr>
-                <div className='stats'>
-                  <i className='far fa-calendar-alt mr-1'></i>
-                  Size
-                </div>
-              </Card.Footer>
-            </Card>
-          </Col>
-
-          {/* --------------------------------------------------------------------------------------------- */}
-
-          <Col lg='3' sm='6'>
-            <Card className='card-stats'>
-              <Card.Body>
-                <Row>
-                  <Col xs='5'>
-                    <div className='icon-big icon-warning'>
-                      <i className='nc-icon nc-vector text-danger'></i>
-                    </div>
-                  </Col>
-                  <Col xs='7'>
-                    <div className='numbers'>
-                      <p className='card-category'></p>
-                      <Card.Title as='h3'>23504</Card.Title>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-              <Card.Footer>
-                <hr></hr>
-                <div className='stats'>
-                  <i className='far fa-clock-o mr-1'></i>
-                  Number of records
-                </div>
-              </Card.Footer>
-            </Card>
-          </Col>
-          <Col lg='3' sm='6'>
-            <Card className='card-stats'>
-              <Card.Body>
-                <Row>
-                  <Col xs='5'>
-                    <div className='icon-big icon-warning'>
-                      <i className='nc-icon nc-favourite-28 text-primary'></i>
-                    </div>
-                  </Col>
-                  <Col xs='7'>
-                    <div className='numbers'>
-                      <p className='card-category'></p>
-                      <Card.Title as='h3'>Supervised</Card.Title>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-              <Card.Footer>
-                <hr></hr>
-                <div className='stats'>
-                  <i className='fas fa-redo mr-1'></i>
-                  Type of classification
-                </div>
-              </Card.Footer>
-            </Card>
-          </Col>
-        </Row>
-
-        {/* // --------------------------------------------------------------------------------------- */}
-
-        <Row className='justify-content-md-center'>
-          <Col md='12'>
-            <Card>
-              <Card.Header>
-                <Container>
+      {!window.showETLPage && (
+        <Container fluid className='background2'>
+          <Row>
+            <Col lg='3' sm='6'>
+              <Card className='card-stats'>
+                <Card.Body>
                   <Row>
-                    <Col sm={8}>
-                      <Card.Title as='h4'>Feature importances</Card.Title>
+                    <Col xs='5'>
+                      <div className='icon-big icon-warning'>
+                        <i className='nc-icon nc-chart text-warning'></i>
+                      </div>
                     </Col>
-                    <Col
-                      sm={4}
-                      style={{ display: 'flex', justifyContent: 'right' }}
-                    >
-                      <Button type='button' onClick={downloadImage}>
-                        Download
-                      </Button>
+                    <Col xs='7'>
+                      <div className='numbers'>
+                        <p className='card-category'></p>
+                        <Card.Title as='h3'>Yelp Reviews</Card.Title>
+                      </div>
                     </Col>
                   </Row>
-                </Container>
-                {/* <p className='card-category'></p> */}
-              </Card.Header>
-              <Card.Body>
-                <div style={{ padding: '20px', width: '100%', height: '100%' }}>
-                  <Bar ref={ref} options={options} data={data1} />
-                </div>
-              </Card.Body>
-              <Card.Footer>
-                {/* <div className='legend'>
+                </Card.Body>
+                <Card.Footer>
+                  <hr></hr>
+                  <div className='stats'>
+                    <i className='fas fa-redo mr-1'></i>
+                    Dataset
+                  </div>
+                </Card.Footer>
+              </Card>
+            </Col>
+
+            {/* --------------------------------------------------------------------------------------------- */}
+
+            <Col lg='3' sm='6'>
+              <Card className='card-stats'>
+                <Card.Body>
+                  <Row>
+                    <Col xs='5'>
+                      <div className='icon-big icon-warning'>
+                        <i className='nc-icon nc-light-3 text-success'></i>
+                      </div>
+                    </Col>
+                    <Col xs='7'>
+                      <div className='numbers'>
+                        <p className='card-category'></p>
+                        <Card.Title as='h3'>50GB</Card.Title>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+                <Card.Footer>
+                  <hr></hr>
+                  <div className='stats'>
+                    <i className='far fa-calendar-alt mr-1'></i>
+                    Size
+                  </div>
+                </Card.Footer>
+              </Card>
+            </Col>
+
+            {/* --------------------------------------------------------------------------------------------- */}
+
+            <Col lg='3' sm='6'>
+              <Card className='card-stats'>
+                <Card.Body>
+                  <Row>
+                    <Col xs='5'>
+                      <div className='icon-big icon-warning'>
+                        <i className='nc-icon nc-vector text-danger'></i>
+                      </div>
+                    </Col>
+                    <Col xs='7'>
+                      <div className='numbers'>
+                        <p className='card-category'></p>
+                        <Card.Title as='h3'>23504</Card.Title>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+                <Card.Footer>
+                  <hr></hr>
+                  <div className='stats'>
+                    <i className='far fa-clock-o mr-1'></i>
+                    Number of records
+                  </div>
+                </Card.Footer>
+              </Card>
+            </Col>
+            <Col lg='3' sm='6'>
+              <Card className='card-stats'>
+                <Card.Body>
+                  <Row>
+                    <Col xs='5'>
+                      <div className='icon-big icon-warning'>
+                        <i className='nc-icon nc-favourite-28 text-primary'></i>
+                      </div>
+                    </Col>
+                    <Col xs='7'>
+                      <div className='numbers'>
+                        <p className='card-category'></p>
+                        <Card.Title as='h3'>Supervised</Card.Title>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+                <Card.Footer>
+                  <hr></hr>
+                  <div className='stats'>
+                    <i className='fas fa-redo mr-1'></i>
+                    Type of classification
+                  </div>
+                </Card.Footer>
+              </Card>
+            </Col>
+          </Row>
+
+          {/* // --------------------------------------------------------------------------------------- */}
+
+          <Row className='justify-content-md-center'>
+            <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Feature importances</Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
+                  {/* <p className='card-category'></p> */}
+                </Card.Header>
+                <Card.Body>
+                  <div
+                    style={{ padding: '20px', width: '100%', height: '100%' }}
+                  >
+                    <Bar ref={ref} options={options} data={data1} />
+                  </div>
+                </Card.Body>
+                <Card.Footer>
+                  {/* <div className='legend'>
                   <i className='fas fa-circle text-info'></i>
                   Open <i className='fas fa-circle text-danger'></i>
                   Click <i className='fas fa-circle text-warning'></i>
                   Click Second Time
                 </div> */}
-                {/* <hr></hr>
+                  {/* <hr></hr>
                 <div className='stats'>
                   <i className='fas fa-history'></i>
                   Updated 3 minutes ago
                 </div> */}
-              </Card.Footer>
-            </Card>
-          </Col>
-          {/* ---------------------------------------------------------------------------- */}
-          <Col md='12'>
-            <Card>
-              <Card.Header>
-                <Card.Title as='h4'>Number of occurrences</Card.Title>
-                <p className='card-category'></p>
-              </Card.Header>
-              <Card.Body>
-                <ThemeProvider theme={defaultMaterialTheme}>
-                  <MaterialTable
-                    icons={tableIcons}
-                    options={{
-                      exportButton: true,
-                    }}
-                    columns={columns}
-                    data={tableData}
-                    title='Demo Title'
-                  />
-                </ThemeProvider>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+                </Card.Footer>
+              </Card>
+            </Col>
+            {/* ---------------------------------------------------------------------------- */}
+            <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Card.Title as='h4'>Number of occurrences</Card.Title>
+                  <p className='card-category'></p>
+                </Card.Header>
+                <Card.Body>
+                  <ThemeProvider theme={defaultMaterialTheme}>
+                    <MaterialTable
+                      icons={tableIcons}
+                      options={{
+                        exportButton: true,
+                        exportAllData: true,
+                      }}
+                      columns={columns}
+                      data={tableData}
+                      title='Demo Title'
+                    />
+                  </ThemeProvider>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 }
