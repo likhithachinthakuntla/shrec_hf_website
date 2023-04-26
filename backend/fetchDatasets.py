@@ -17,7 +17,7 @@ class FetchDatasets:
     def viewDataSnapshot(self):
         print(self.datasetID)
         data = load_dataset(self.datasetID)
-        snapshpt = data['train'][0:10]
+        snapshpt = data['train'][0:len(data['train'])]
         pdata = pd.DataFrame(snapshpt)
         self.debug_print(pdata)
         return pdata
@@ -40,7 +40,7 @@ class FetchDatasets:
             self.debug_print("============== DATASET {} =======================".format(i+1))
             self.debug_print(data)
             self.debug_print("==================================================\n")
-            if i == 5:
+            if i == 100:
                 break
     
     """
