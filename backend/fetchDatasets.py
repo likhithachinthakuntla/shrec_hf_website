@@ -4,7 +4,7 @@ import logging
 
 class FetchDatasets:
     def __init__(self, datasetID, logger):
-        self.datasetID = None
+        self.datasetID = datasetID
         pass
 
     def debug_print(self, stmt):
@@ -15,9 +15,20 @@ class FetchDatasets:
     """
 
     def viewDataSnapshot(self):
-        data = load_dataset(self.datasetID, split="train")
-        pdata = pd.DataFrame(data)
+        print(self.datasetID)
+        data = load_dataset(self.datasetID)
+        snapshpt = data['train'][0:len(data['train'])]
+        pdata = pd.DataFrame(snapshpt)
         self.debug_print(pdata)
+        return pdata
+
+    def getDatasetStats(self):
+        stats = {'Name': 'Yelp Reviews',
+                 'Size':'196MB',
+                 'NumInstances': 700000,
+                 'type': 'Supervised'
+                 }
+        return stats
 
     """
     Fetch All Datasets metadata from Hugging Face API
@@ -29,7 +40,7 @@ class FetchDatasets:
             self.debug_print("============== DATASET {} =======================".format(i+1))
             self.debug_print(data)
             self.debug_print("==================================================\n")
-            if i == 5:
+            if i == 100:
                 break
     
     """
@@ -41,14 +52,15 @@ class FetchDatasets:
             # self.debug_print(dset.tags[0])
             if str(catype)+':'+str(cat) in dset.tags:
                 count+=1
-                self.debug_print("DATASET INFO:======\n ", dset.tags)
+                self.debug_print("DATASET INFO= {}:======\n {}".format(count, str(dset.tags)))
                 self.debug_print("==================================================\n")
-            if count == 10:
+            if count == 100:
                 break
         
 
 if __name__ == '__main__':
     ds = FetchDatasets('yelp_review_full',logger=None)
-    ds.showAllDatasets()
+    # ds.showAllDatasets()
     ds.debug_print("\n +++++++++++ \n")
-    ds.showDatasetByCategory('license','mit')
+    ds.viewDataSnapshot()
+    # ds.showDatasetByCategory('task_categories','text-classification')
