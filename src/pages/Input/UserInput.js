@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import {
   Button,
   Card,
@@ -25,7 +25,7 @@ const UserInput = () => {
   const navigate = useNavigate();
   const analyseData = () => {};
 
-  const etlData = ['Yelp Reviews'];
+  const [etlData, setEtlData] = useState([]);
   const modelTrainingData = ['Bert', 'LSTM'];
   const trainingFrameworkData = ['Tensorflow', 'PyTorch'];
   const infrastructureData = [
@@ -54,6 +54,7 @@ const UserInput = () => {
     return { value: item, label: item };
   });
 
+  const [isLoadingEtlData, setIsLoadingEtlData] = useState(true);
   const [selectedEtlData, setSelectedEtlData] = useState({label: '', value:''});
   const [selectedModelTrainingData, setSelectedModelTrainingData] = useState({label: '', value:''});
   const [selectedTrainingFrameworkData, setSelectedTrainingFrameworkData] = useState({label: '', value:''});
@@ -125,6 +126,16 @@ const UserInput = () => {
   }
   }
 
+  useEffect(() => {
+    async function getAllDatasets() {
+      const response = await fetch('/getAllDatasets');
+      const data = await response.json();
+      setEtlData(data);
+      setIsLoadingEtlData(false);
+    }
+    getAllDatasets();
+  }, [window.projectName]);
+
   const handleNext = () => {
     // debugger;
     // if (isLastStep()) {
@@ -164,7 +175,7 @@ const UserInput = () => {
         {submitClicked == false && (
           <Fragment>
             {renderStep()}
-
+            <div style={{paddingTop: '60px'}}>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               {activeStep > 1 && (
                 <Button
@@ -183,6 +194,7 @@ const UserInput = () => {
                 </Button>
               )}
             </Box>
+            </div>
           </Fragment>
         )}
 
@@ -252,7 +264,7 @@ const UserInput = () => {
   const renderStep1 = () => {
     return (
       <Grid className='dropdown-pos' marginY={4} ml={4}>
-        <Dropdown placeholder='Dataset' options={ip[0]} id={0} handleSelectedData={handleSelectedData} selectedOption={selectedEtlData} />
+        <Dropdown placeholder='Dataset' options={ip[0]} id={0} handleSelectedData={handleSelectedData} selectedOption={selectedEtlData} isLoadingData={isLoadingEtlData} />
       </Grid>
     );
   };

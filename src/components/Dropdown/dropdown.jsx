@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Select, { components } from 'react-select';
 
-export default ({ placeholder, options, id, handleSelectedData, selectedOption, labelKey, valueKey }) => {
+export default ({ placeholder, options, id, handleSelectedData, selectedOption, isLoadingData=false, labelKey, valueKey }) => {
   const { ValueContainer, Placeholder } = components;
 
   const CustomValueContainer = ({ children, ...props }) => {
@@ -71,6 +71,11 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
       position: 'absolute',
       // color: 'black',
     }),
+    menuList: (provided) => ({
+      ...provided,
+      maxHeight: "150px",
+      overflowY: "auto",
+    }),
   };
 
   return (
@@ -78,7 +83,7 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
       <div>{selectedOption.value=='' && (<Select
         className='basic-single'
         classNamePrefix='select'
-        isLoading={false}
+        isLoading={isLoadingData}
         // isClearable={true}
         isSearchable={true}
         isDisabled={false}
@@ -97,7 +102,7 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
         <Select
         className='basic-single'
         classNamePrefix='select'
-        isLoading={false}
+        isLoading={isLoadingData}
         // isClearable={true}
         isSearchable={true}
         isDisabled={false}

@@ -11,8 +11,42 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import './Dashboard.css';
 import tableIcons from './MaterialTableIcons';
 import InProgress from '../../components/In_Progress_page/In_Progress_Page';
+import { Checkbox } from '@material-ui/core';
+import { blue } from "@material-ui/core/colors";
 
 function Dashboard() {
+
+  const [cardData, setCardData] = useState({Name: '', Size:'', NumInstances:'', type:''});
+
+  useEffect(() => {
+    async function getDatasetStats() {
+      const response = await fetch('/getDatasetStats');
+      const data = await response.json();
+      setCardData(data);
+    }
+    getDatasetStats();
+  }, []);
+
+  const checkboxOptions = [
+    { id: 1, label: "Remove Punctuations" },
+    { id: 2, label: "Remove Stop Words" },
+    { id: 3, label: "Remove HTML Tags" },
+    { id: 4, label: "Lemmatization (extract root words)" },
+    { id: 5, label: "Stemming (remove suffix)" },
+  ];
+
+  const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState([]);
+
+  const handleCheckboxChange = (event) => {
+    const optionId = parseInt(event.target.value);
+    const isChecked = selectedCheckboxOptions.includes(optionId);
+    if (isChecked) {
+      setSelectedCheckboxOptions(selectedCheckboxOptions.filter((id) => id !== optionId));
+    } else {
+      setSelectedCheckboxOptions([...selectedCheckboxOptions, optionId]);
+    }
+  };
+
   useEffect(() => {
     // Fetch Data to be populated in the table
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -146,7 +180,7 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>Yelp Reviews</Card.Title>
+                        <Card.Title as='h3'>{cardData.Name}</Card.Title>
                       </div>
                     </Col>
                   </Row>
@@ -175,7 +209,7 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>50GB</Card.Title>
+                        <Card.Title as='h3'>{cardData.Size}</Card.Title>
                       </div>
                     </Col>
                   </Row>
@@ -204,7 +238,7 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>23504</Card.Title>
+                        <Card.Title as='h3'>{cardData.NumInstances}</Card.Title>
                       </div>
                     </Col>
                   </Row>
@@ -230,7 +264,7 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>Supervised</Card.Title>
+                        <Card.Title as='h3'>{cardData.type}</Card.Title>
                       </div>
                     </Col>
                   </Row>
@@ -249,6 +283,59 @@ function Dashboard() {
           {/* // --------------------------------------------------------------------------------------- */}
 
           <Row className='justify-content-md-center'>
+          <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Select Pre-procesing Steps</Card.Title>
+                      </Col>
+                      {/* <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button>
+                      </Col> */}
+                    </Row>
+                  </Container>
+                  {/* <p className='card-category'></p> */}
+                </Card.Header>
+                <Card.Body>
+                  <div
+                    style={{ padding: '20px', width: '100%', height: '100%' }}
+                  >
+                  {checkboxOptions.map((option) => (
+                    <div key={option.id}>
+                      <Checkbox
+                        value={option.id}
+                        checked={selectedCheckboxOptions.includes(option.id)}
+                        onChange={handleCheckboxChange}
+                        color="primary"
+                        style={{ color: blue[600] }}
+                      />
+                      {option.label}
+                    </div>
+                  ))}
+                  </div>
+                </Card.Body>
+                <Card.Footer>
+                  {/* <div className='legend'>
+                  <i className='fas fa-circle text-info'></i>
+                  Open <i className='fas fa-circle text-danger'></i>
+                  Click <i className='fas fa-circle text-warning'></i>
+                  Click Second Time
+                </div> */}
+                  {/* <hr></hr>
+                <div className='stats'>
+                  <i className='fas fa-history'></i>
+                  Updated 3 minutes ago
+                </div> */}
+                </Card.Footer>
+              </Card>
+            </Col>
             <Col md='12'>
               <Card>
                 <Card.Header>

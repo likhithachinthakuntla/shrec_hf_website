@@ -1,10 +1,12 @@
 from datasets import list_datasets, DatasetInfo, load_dataset
+from flask import Blueprint
 import pandas as pd
 import logging
 
 class FetchDatasets:
     def __init__(self, datasetID, logger):
         self.datasetID = datasetID
+        self.fetchDatasets = Blueprint('fetchDatasets', __name__)
         pass
 
     def debug_print(self, stmt):
@@ -33,6 +35,11 @@ class FetchDatasets:
     """
     Fetch All Datasets metadata from Hugging Face API
     """
+
+    def getAllDatasets(self):
+        count = 10
+        return list_datasets()[:count]
+
     def showAllDatasets(self):
         datas = list_datasets(with_community_datasets=True, with_details=True)
         self.debug_print("TOTAL NUMBER OF DATASETS FETCHED = {}\n".format(len(datas)))
@@ -57,6 +64,9 @@ class FetchDatasets:
             if count == 100:
                 break
         
+    def register_routes(self):
+        self.fetchDatasets.add_url_rule('/getAllDatasets', 'getAllDatasets', self.getAllDatasets)
+        self.fetchDatasets.add_url_rule('/getDatasetStats', 'getDatasetStats', self.getDatasetStats)
 
 if __name__ == '__main__':
     ds = FetchDatasets('yelp_review_full',logger=None)
