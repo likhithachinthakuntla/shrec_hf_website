@@ -1,9 +1,11 @@
 from huggingface_hub import HfApi, ModelFilter
+from flask import Blueprint
 import logging
 
 class FetchModels:
     def __init__(self, datasetID, modelID, logger):
         self.datasetID = None
+        self.fetchModels = Blueprint('fetchModels', __name__)
         pass
 
     def debug_print(self, stmt):
@@ -63,7 +65,8 @@ class FetchModels:
             if i<5:
                 self.debug_print(m)
 
-
+    def register_routes(self):
+        self.fetchModels.add_url_rule('/showModelsForDataset', 'showModelsForDataset', self.showModelsForDataset)
 
 if __name__ == '__main__':
     ds = FetchModels('yelp_review_full', None, logger=None)
