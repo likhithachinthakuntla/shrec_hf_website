@@ -26,7 +26,8 @@ const UserInput = () => {
   const analyseData = () => {};
 
   const [etlData, setEtlData] = useState([]);
-  const modelTrainingData = ['Bert', 'LSTM'];
+  // const modelTrainingData = ['Bert', 'LSTM'];
+  const [modelTrainingData, setModelTrainingData] = useState([]);
   const trainingFrameworkData = ['Tensorflow', 'PyTorch'];
   const infrastructureData = [
     'Sapphire Rapids CPU',
@@ -55,6 +56,7 @@ const UserInput = () => {
   });
 
   const [isLoadingEtlData, setIsLoadingEtlData] = useState(true);
+  const [isLoadingModelTrainingData, setIsLoadingModelTrainingData] = useState(true);
   const [selectedEtlData, setSelectedEtlData] = useState({label: '', value:''});
   const [selectedModelTrainingData, setSelectedModelTrainingData] = useState({label: '', value:''});
   const [selectedTrainingFrameworkData, setSelectedTrainingFrameworkData] = useState({label: '', value:''});
@@ -105,6 +107,7 @@ const UserInput = () => {
   const handleSelectedData = (id, eventData) => {
     if(id==0) {
         setSelectedEtlData(eventData);
+        window.dataset_name = eventData.value;
     } else if (id==1) {
         setSelectedModelTrainingData(eventData);
     } else if (id==2) {
@@ -128,13 +131,23 @@ const UserInput = () => {
 
   useEffect(() => {
     async function getAllDatasets() {
-      const response = await fetch('/getAllDatasets');
+      const response = await fetch('/getAllDatasets/');
       const data = await response.json();
       setEtlData(data);
       setIsLoadingEtlData(false);
     }
     getAllDatasets();
   }, [window.projectName]);
+
+  useEffect(() => {
+    async function showModelsForDataset() {
+      const response = await fetch(`/showModelsForDataset/?dataset_name=${window.dataset_name}`);
+      const data = await response.json();
+      setModelTrainingData(data);
+      setIsLoadingModelTrainingData(false);
+    }
+    showModelsForDataset();
+  }, [window.dataset_name]);
 
   const handleNext = () => {
     // debugger;
@@ -279,7 +292,7 @@ const UserInput = () => {
           marginY={4}
           ml={4}
         >
-          <Dropdown placeholder='Model Training' options={ip[1]} id={1} handleSelectedData={handleSelectedData} selectedOption={selectedModelTrainingData} />
+          <Dropdown placeholder='Model Training' options={ip[1]} id={1} handleSelectedData={handleSelectedData} selectedOption={selectedModelTrainingData} isLoadingData={isLoadingModelTrainingData} />
           <Dropdown placeholder='Training Framework' options={ip[2]} id={2} handleSelectedData={handleSelectedData} selectedOption={selectedTrainingFrameworkData} />
         </Stack>
       </>

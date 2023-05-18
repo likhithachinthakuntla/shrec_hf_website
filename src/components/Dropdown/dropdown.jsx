@@ -4,13 +4,14 @@ import Select, { components } from 'react-select';
 
 export default ({ placeholder, options, id, handleSelectedData, selectedOption, isLoadingData=false, labelKey, valueKey }) => {
   const { ValueContainer, Placeholder } = components;
+  // const { ValueContainer } = components;
 
   const CustomValueContainer = ({ children, ...props }) => {
     return (
       <ValueContainer {...props}>
-        <Placeholder {...props} isFocused={props.isFocused}>
+        {/* <Placeholder {...props} isFocused={props.isFocused}>
           {props.selectProps.placeholder}
-        </Placeholder>
+        </Placeholder> */}
         {React.Children.map(children, (child) =>
           child && child.type !== Placeholder ? child : null
         )}
@@ -60,17 +61,17 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
       marginLeft: '4px',
       overflow: 'visible',
     }),
-    placeholder: (base, defaultStyles) => ({
-      ...base,
-      ...defaultStyles,
-      minWidth: 200,
-      maxWidth: 300,
-      textAlign: 'left',
-      fontStyle: 'italic',
-      marginBottom: '65px',
-      position: 'absolute',
-      // color: 'black',
-    }),
+    // placeholder: (base, defaultStyles) => ({
+    //   ...base,
+    //   ...defaultStyles,
+    //   minWidth: 200,
+    //   maxWidth: 300,
+    //   textAlign: 'left',
+    //   fontStyle: 'italic',
+    //   marginBottom: '65px',
+    //   position: 'absolute',
+    //   // color: 'black',
+    // }),
     menuList: (provided) => ({
       ...provided,
       maxHeight: "150px",
@@ -80,7 +81,7 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
 
   return (
     <>
-      <div>{selectedOption.value=='' && (<Select
+      <div>{selectedOption.value=='' && (<div><p style={{color: 'grey', opacity: 1, display: 'contents'}}>{placeholder}</p><Select
         className='basic-single'
         classNamePrefix='select'
         isLoading={isLoadingData}
@@ -96,10 +97,10 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
         onChange={(event) => handleSelectedData(id,event)}
         id={id}
         components={{ValueContainer: CustomValueContainer}}
-      />)}{
+      /></div>)}{
         selectedOption.value != '' &&
         (
-        <Select
+          <div><p style={{color: 'grey', opacity: 1, display: 'contents'}}>{placeholder}</p><Select
         className='basic-single'
         classNamePrefix='select'
         isLoading={isLoadingData}
@@ -115,7 +116,7 @@ export default ({ placeholder, options, id, handleSelectedData, selectedOption, 
         onChange={(event) => handleSelectedData(id,event)}
         id={id}
         components={{ValueContainer: CustomValueContainer}}
-      />
+      /></div>
       )
       }
       </div>

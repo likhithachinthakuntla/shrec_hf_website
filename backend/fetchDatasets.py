@@ -2,6 +2,7 @@ from datasets import list_datasets, DatasetInfo, load_dataset
 from flask import Blueprint
 import pandas as pd
 import logging
+import sys
 
 class FetchDatasets:
     def __init__(self, datasetID, logger):
@@ -24,10 +25,12 @@ class FetchDatasets:
         self.debug_print(pdata)
         return pdata
 
-    def getDatasetStats(self):
-        stats = {'Name': 'Yelp Reviews',
-                 'Size':'196MB',
-                 'NumInstances': 700000,
+    def getDatasetStats(self, dataset_name):
+        data = pd.DataFrame(load_dataset(dataset_name, split='train'))
+        
+        stats = {'Name': dataset_name,
+                 'Size': str(round(sys.getsizeof(data)/(1024 * 1024),2)) + ' MB',
+                 'NumInstances': len(data),
                  'type': 'Supervised'
                  }
         return stats

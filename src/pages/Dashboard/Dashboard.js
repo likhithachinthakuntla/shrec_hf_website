@@ -20,7 +20,7 @@ function Dashboard() {
 
   useEffect(() => {
     async function getDatasetStats() {
-      const response = await fetch('/getDatasetStats');
+      const response = await fetch(`/getDatasetStats/?dataset_name=${window.dataset_name}`);
       const data = await response.json();
       setCardData(data);
     }

@@ -39,16 +39,17 @@ class FetchModels:
     """
     def showModelsForDataset(self, dataset):
         api = HfApi()
-        filt =ModelFilter(
+        filt = ModelFilter(
                             task="text-classification",
-                            library="tf",
                             trained_dataset=dataset
                         )
         models = api.list_models(filter=filt)
-        self.debug_print(len(models))
-        for i,m in enumerate(models):
-            if i<5:
-                self.debug_print(m)
+        
+        model_names = [model.modelId for model in models]
+        
+        return model_names
+    
+        
 
     
     """
