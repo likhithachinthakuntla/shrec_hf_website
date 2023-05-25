@@ -13,10 +13,24 @@ import tableIcons from './MaterialTableIcons';
 import InProgress from '../../components/In_Progress_page/In_Progress_Page';
 import { Checkbox } from '@material-ui/core';
 import { blue } from "@material-ui/core/colors";
+import { IconButton } from '@mui/material';
+import { IoIosArrowDropdownCircle, IoIosArrowDropleftCircle } from "react-icons/io";
+import { AiOutlineLoading } from 'react-icons/ai';
 
 function Dashboard() {
 
-  const [cardData, setCardData] = useState({Name: '', Size:'', NumInstances:'', type:''});
+  const [cardData, setCardData] = useState({ Name: '', Size: '', NumInstances: '', type: '' });
+  const [showFeatureImportances, setShowFeatureImportances] = useState(false);
+  const [showOccurrances, setShowOccurrances] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleClickFeatureImportances = () => {
+    setShowFeatureImportances(!showFeatureImportances);
+  }
+
+  const handleClickShowOccurrances = () => {
+    setShowOccurrances(!showOccurrances);
+  }
 
   useEffect(() => {
     async function getDatasetStats() {
@@ -25,6 +39,17 @@ function Dashboard() {
       setCardData(data);
     }
     getDatasetStats();
+  }, []);
+
+  useEffect(() => {
+    async function getGraphsData() {
+      const response = await fetch(`/getETLData/?dataset_name=yelp_review_full`);
+      const data = await response.json();
+      setBarChartData(JSON.parse(data.bar_graph_json));
+      setTableData(JSON.parse(data.data_summary_json));
+      setIsLoading(false);
+    }
+    getGraphsData();
   }, []);
 
   const checkboxOptions = [
@@ -47,23 +72,23 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    // Fetch Data to be populated in the table
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((resp) => resp.json())
-      .then((resp) => {
-        console.log(resp);
-        setTableData(resp);
-      });
+  // useEffect(() => {
+  //   // Fetch Data to be populated in the table
+  //   fetch('https://jsonplaceholder.typicode.com/users')
+  //     .then((resp) => resp.json())
+  //     .then((resp) => {
+  //       console.log(resp);
+  //       setTableData(resp);
+  //     });
 
-    // Fetch Data to be populated in the horizontal bar-chart
-    fetch('https://dummyjson.com/products/?limit=10')
-      .then((chartRes) => chartRes.json())
-      .then((chartRes) => {
-        console.log(chartRes);
-        setBarChartData(chartRes.products);
-      });
-  }, []);
+  //   // Fetch Data to be populated in the horizontal bar-chart
+  //   fetch('https://dummyjson.com/products/?limit=10')
+  //     .then((chartRes) => chartRes.json())
+  //     .then((chartRes) => {
+  //       console.log(chartRes);
+  //       setBarChartData(chartRes.products);
+  //     });
+  // }, []);
 
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
@@ -104,7 +129,7 @@ function Dashboard() {
       },
       title: {
         display: true,
-        text: 'Yelp Movies Rating',
+        text: window.dataset_name,
       },
     },
   };
@@ -112,11 +137,11 @@ function Dashboard() {
   const [barChartData, setBarChartData] = useState([]);
 
   const data1 = {
-    labels: barChartData.map((x) => x.title),
+    labels: barChartData.map((x) => x.label),
     datasets: [
       {
-        label: 'Price',
-        data: barChartData.map((x) => x.price),
+        label: 'Count',
+        data: barChartData.map((x) => x.counts),
         fill: true,
         backgroundColor: 'rgba(6, 156,51, .3)',
         borderColor: '#02b844',
@@ -148,14 +173,20 @@ function Dashboard() {
 
   const [tableData, setTableData] = useState([]);
 
+  // const columns = [
+  //   { title: 'ID', field: 'id' },
+  //   { title: 'Username', field: 'username' },
+  //   { title: 'Name', field: 'name' },
+  //   { title: 'Email', field: 'email' },
+  //   { title: 'Phone', field: 'phone' },
+  //   { title: 'Web Link', field: 'website' },
+  //   { title: 'City', field: 'address.city' },
+  // ];
+  
   const columns = [
     { title: 'ID', field: 'id' },
-    { title: 'Username', field: 'username' },
-    { title: 'Name', field: 'name' },
-    { title: 'Email', field: 'email' },
-    { title: 'Phone', field: 'phone' },
-    { title: 'Web Link', field: 'website' },
-    { title: 'City', field: 'address.city' },
+    { title: 'Label', field: 'label' },
+    { title: 'Text', field: 'text' },
   ];
 
   // -----------------------------
@@ -283,7 +314,7 @@ function Dashboard() {
           {/* // --------------------------------------------------------------------------------------- */}
 
           <Row className='justify-content-md-center'>
-          <Col md='12'>
+            <Col md='12'>
               <Card>
                 <Card.Header>
                   <Container>
@@ -307,18 +338,18 @@ function Dashboard() {
                   <div
                     style={{ padding: '20px', width: '100%', height: '100%' }}
                   >
-                  {checkboxOptions.map((option) => (
-                    <div key={option.id}>
-                      <Checkbox
-                        value={option.id}
-                        checked={selectedCheckboxOptions.includes(option.id)}
-                        onChange={handleCheckboxChange}
-                        color="primary"
-                        style={{ color: blue[600] }}
-                      />
-                      {option.label}
-                    </div>
-                  ))}
+                    {checkboxOptions.map((option) => (
+                      <div key={option.id}>
+                        <Checkbox
+                          value={option.id}
+                          checked={selectedCheckboxOptions.includes(option.id)}
+                          onChange={handleCheckboxChange}
+                          color="primary"
+                          style={{ color: blue[600] }}
+                        />
+                        {option.label}
+                      </div>
+                    ))}
                   </div>
                 </Card.Body>
                 <Card.Footer>
@@ -348,21 +379,61 @@ function Dashboard() {
                         sm={4}
                         style={{ display: 'flex', justifyContent: 'right' }}
                       >
+                        {/* <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button> */}
+                        {/* <div> */}
+                        <IconButton
+                          aria-label='Add project'
+                          size='large'
+                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                          onClick={handleClickFeatureImportances}
+                        >
+                          <div>{!showFeatureImportances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                          <div>{showFeatureImportances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                        </IconButton>
+                        {/* </div> */}
+                        {/* <div>
+              <IconButton
+                aria-label='Add project'
+                size='large'
+                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
+                onClick={handleClickFeatureImportances}
+              >
+                <IoIosArrowDropdownCircle fontSize='inherit' />
+              </IconButton>
+              </div> */}
+                      </Col>
+                    </Row>
+                    {!isLoading && showFeatureImportances && <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'></Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
                         <Button type='button' onClick={downloadImage}>
                           Download
                         </Button>
                       </Col>
-                    </Row>
+                    </Row>}
                   </Container>
                   {/* <p className='card-category'></p> */}
                 </Card.Header>
-                <Card.Body>
+                {showFeatureImportances && isLoading && (
+                  <div className="loadingcontainer">
+                    <AiOutlineLoading className="loadingicon" />
+                    <p style={{paddingTop: '20px'}}>Loading...</p>
+                  </div>
+                )}
+                {!isLoading && showFeatureImportances && <Card.Body>
                   <div
                     style={{ padding: '20px', width: '100%', height: '100%' }}
                   >
                     <Bar ref={ref} options={options} data={data1} />
                   </div>
-                </Card.Body>
+                </Card.Body>}
                 <Card.Footer>
                   {/* <div className='legend'>
                   <i className='fas fa-circle text-info'></i>
@@ -382,10 +453,55 @@ function Dashboard() {
             <Col md='12'>
               <Card>
                 <Card.Header>
-                  <Card.Title as='h4'>Number of occurrences</Card.Title>
-                  <p className='card-category'></p>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Number of occurrences</Card.Title>
+                      </Col>
+                      {/* <Col> */}
+
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        {/* <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button> */}
+                        {/* <div> */}
+                        <IconButton
+                          aria-label='Add project'
+                          size='large'
+                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                          onClick={handleClickShowOccurrances}
+                        >
+                          <div>{!showOccurrances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                          <div>{showOccurrances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                        </IconButton>
+                        {/* </div> */}
+                        {/* <div>
+              <IconButton
+                aria-label='Add project'
+                size='large'
+                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
+                onClick={handleClickFeatureImportances}
+              >
+                <IoIosArrowDropdownCircle fontSize='inherit' />
+              </IconButton>
+              </div> */}
+                      </Col>
+
+                      {/* </Col> */}
+                    </Row>
+                  </Container>
+                  {/* <p className='card-category'></p> */}
                 </Card.Header>
-                <Card.Body>
+                {showOccurrances && isLoading && (
+                  <div className="loadingcontainer">
+                    <AiOutlineLoading className="loadingicon" />
+                    <p style={{paddingTop: '20px'}}>Loading...</p>
+                  </div>
+                )}
+                {!isLoading && showOccurrances && <Card.Body>
                   <ThemeProvider theme={defaultMaterialTheme}>
                     <MaterialTable
                       icons={tableIcons}
@@ -395,10 +511,10 @@ function Dashboard() {
                       }}
                       columns={columns}
                       data={tableData}
-                      title='Demo Title'
+                      title={window.dataset_name}
                     />
                   </ThemeProvider>
-                </Card.Body>
+                </Card.Body>}
               </Card>
             </Col>
           </Row>

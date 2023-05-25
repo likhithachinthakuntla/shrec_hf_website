@@ -11,3 +11,17 @@
   min-height: 100vh;
   /* background-repeat: repeat-x; */
 }
+
+.loadingcontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 50px; */
+  padding-bottom: 50px;
+}
+
+.loadingicon {
+  animation: spin 1s infinite linear;
+  font-size: 24px;
+  margin-right: 8px;
+}
