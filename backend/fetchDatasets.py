@@ -3,6 +3,7 @@ from flask import Blueprint
 import pandas as pd
 import logging
 import sys
+import requests
 
 class FetchDatasets:
     def __init__(self, datasetID, logger):
@@ -40,8 +41,21 @@ class FetchDatasets:
     """
 
     def getAllDatasets(self):
-        count = 10
-        return list_datasets()[:count]
+        
+        application = 'text-classification'
+
+        url = f"https://huggingface.co/api/matching-models-tags?pipeline_tag={application}&type=dataset"
+
+        response = requests.get(url)
+        
+        if response.status_code == 200 :
+            
+            datasets = response.json()['matchingTags']
+        
+            for i in range(0, len(datasets)):
+                datasets[i] = datasets[i].replace('dataset:','')
+            
+            return datasets
 
     def showAllDatasets(self):
         datas = list_datasets(with_community_datasets=True, with_details=True)

@@ -95,7 +95,7 @@ const Home = () => {
             {/* <p className='project-status-data'>Oops!</p> */}
             {showNoProjects && (
               <div>
-                <p className='project-status'>No projects available!</p>
+                <p style={{fontSize: '25px'}} className='project-status'>No projects available!</p>
               </div>
             )}
             <Button

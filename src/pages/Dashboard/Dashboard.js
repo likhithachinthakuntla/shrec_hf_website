@@ -15,14 +15,18 @@ import { Checkbox } from '@material-ui/core';
 import { blue } from "@material-ui/core/colors";
 import { IconButton } from '@mui/material';
 import { IoIosArrowDropdownCircle, IoIosArrowDropleftCircle } from "react-icons/io";
-import { AiOutlineLoading } from 'react-icons/ai';
+import { AiOutlineLoading, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
 
   const [cardData, setCardData] = useState({ Name: '', Size: '', NumInstances: '', type: '' });
   const [showFeatureImportances, setShowFeatureImportances] = useState(false);
   const [showOccurrances, setShowOccurrances] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isChartLoading, setIsChartLoading] = useState(true);
+  const [isCardLoading, setIsCardLoading] = useState(true);
+  const [showPreprocessing, setShowPreprocessing] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickFeatureImportances = () => {
     setShowFeatureImportances(!showFeatureImportances);
@@ -32,22 +36,43 @@ function Dashboard() {
     setShowOccurrances(!showOccurrances);
   }
 
+  const handleShowPreprocessing = () => {
+    setShowPreprocessing(!showPreprocessing);
+  }
+
+  const navigateToTrainingPage = () => {
+    //Uncomment below code - once training page is ready
+    // navigate('/training');
+  }
   useEffect(() => {
     async function getDatasetStats() {
-      const response = await fetch(`/getDatasetStats/?dataset_name=${window.dataset_name}`);
-      const data = await response.json();
-      setCardData(data);
+      try {
+        const response = await fetch(`/getDatasetStats/?dataset_name=${window.dataset_name}`);
+        const data = await response.json();
+        setCardData(data);
+        setIsCardLoading(false);
+      } catch (error) {
+        setCardData({ Name: '--', Size: '--', NumInstances: '--', type: '--' });
+        setIsCardLoading(false);
+      }
     }
     getDatasetStats();
   }, []);
 
   useEffect(() => {
     async function getGraphsData() {
-      const response = await fetch(`/getETLData/?dataset_name=yelp_review_full`);
-      const data = await response.json();
-      setBarChartData(JSON.parse(data.bar_graph_json));
-      setTableData(JSON.parse(data.data_summary_json));
-      setIsLoading(false);
+      try {
+        // const response = await fetch(`/getETLData/?dataset_name=yelp_review_full`);
+        const response = await fetch(`/getETLData/?dataset_name=${window.dataset_name}`);
+        const data = await response.json();
+        setBarChartData(JSON.parse(data.bar_graph_json));
+        setTableData(JSON.parse(data.data_summary_json));
+        setIsChartLoading(false);
+      } catch (error) {
+        setBarChartData([]);
+        setTableData([]);
+        setIsChartLoading(false);
+      }
     }
     getGraphsData();
   }, []);
@@ -116,20 +141,20 @@ function Dashboard() {
   let ref = useRef(null);
 
   const options = {
-    indexAxis: 'y',
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
-    },
+    // indexAxis: 'y',
+    // elements: {
+    //   bar: {
+    //     borderWidth: 2,
+    //   },
+    // },
     responsive: true,
     plugins: {
       legend: {
         position: 'right',
       },
       title: {
-        display: true,
-        text: window.dataset_name,
+        // display: true,
+        // text: window.dataset_name,
       },
     },
   };
@@ -140,7 +165,7 @@ function Dashboard() {
     labels: barChartData.map((x) => x.label),
     datasets: [
       {
-        label: 'Count',
+        label: '',
         data: barChartData.map((x) => x.counts),
         fill: true,
         backgroundColor: 'rgba(6, 156,51, .3)',
@@ -182,9 +207,9 @@ function Dashboard() {
   //   { title: 'Web Link', field: 'website' },
   //   { title: 'City', field: 'address.city' },
   // ];
-  
+
   const columns = [
-    { title: 'ID', field: 'id' },
+    // { title: 'ID', field: 'id' },
     { title: 'Label', field: 'label' },
     { title: 'Text', field: 'text' },
   ];
@@ -198,7 +223,7 @@ function Dashboard() {
 
       {!window.showETLPage && (
         <Container fluid className='background2'>
-          <Row>
+          {!showPreprocessing && (<Row>
             <Col lg='3' sm='6'>
               <Card className='card-stats'>
                 <Card.Body>
@@ -211,7 +236,11 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>{cardData.Name}</Card.Title>
+                        {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                          <AiOutlineLoading className="loadingicon" />
+                          <p style={{ paddingTop: '5px' }}>Loading...</p>
+                        </div>)}
+                        {!isCardLoading && (<Card.Title as='h3'>{cardData.Name}</Card.Title>)}
                       </div>
                     </Col>
                   </Row>
@@ -240,7 +269,11 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>{cardData.Size}</Card.Title>
+                        {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                          <AiOutlineLoading className="loadingicon" />
+                          <p style={{ paddingTop: '5px' }}>Loading...</p>
+                        </div>)}
+                        {!isCardLoading && (<Card.Title as='h3'>{cardData.Size}</Card.Title>)}
                       </div>
                     </Col>
                   </Row>
@@ -269,7 +302,11 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>{cardData.NumInstances}</Card.Title>
+                        {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                          <AiOutlineLoading className="loadingicon" />
+                          <p style={{ paddingTop: '5px' }}>Loading...</p>
+                        </div>)}
+                        {!isCardLoading && (<Card.Title as='h3'>{cardData.NumInstances}</Card.Title>)}
                       </div>
                     </Col>
                   </Row>
@@ -295,7 +332,11 @@ function Dashboard() {
                     <Col xs='7'>
                       <div className='numbers'>
                         <p className='card-category'></p>
-                        <Card.Title as='h3'>{cardData.type}</Card.Title>
+                        {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                          <AiOutlineLoading className="loadingicon" />
+                          <p style={{ paddingTop: '5px' }}>Loading...</p>
+                        </div>)}
+                        {!isCardLoading && (<Card.Title as='h3'>{cardData.type}</Card.Title>)}
                       </div>
                     </Col>
                   </Row>
@@ -309,11 +350,168 @@ function Dashboard() {
                 </Card.Footer>
               </Card>
             </Col>
-          </Row>
+          </Row>)}
 
           {/* // --------------------------------------------------------------------------------------- */}
 
-          <Row className='justify-content-md-center'>
+          {!showPreprocessing && (<Row className='justify-content-md-center'>
+            <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Dataset Preview</Card.Title>
+                      </Col>
+                      {/* <Col> */}
+
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        {/* <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button> */}
+                        {/* <div> */}
+                        <IconButton
+                          aria-label='Add project'
+                          size='large'
+                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                          onClick={handleClickShowOccurrances}
+                        >
+                          <div>{!showOccurrances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                          <div>{showOccurrances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                        </IconButton>
+                        {/* </div> */}
+                        {/* <div>
+              <IconButton
+                aria-label='Add project'
+                size='large'
+                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
+                onClick={handleClickFeatureImportances}
+              >
+                <IoIosArrowDropdownCircle fontSize='inherit' />
+              </IconButton>
+              </div> */}
+                      </Col>
+
+                      {/* </Col> */}
+                    </Row>
+                  </Container>
+                  {/* <p className='card-category'></p> */}
+                </Card.Header>
+                {showOccurrances && isChartLoading && (
+                  <div className="loadingcontainer">
+                    <AiOutlineLoading className="loadingicon" />
+                    <p style={{ paddingTop: '20px' }}>Loading...</p>
+                  </div>
+                )}
+                {!isChartLoading && showOccurrances && <Card.Body>
+                  <ThemeProvider theme={defaultMaterialTheme}>
+                    <MaterialTable
+                      icons={tableIcons}
+                      options={{
+                        exportButton: true,
+                        exportAllData: true,
+                      }}
+                      columns={columns}
+                      data={tableData}
+                      title={window.dataset_name}
+                    />
+                  </ThemeProvider>
+                </Card.Body>}
+              </Card>
+            </Col>
+            {/* ---------------------------------------------------------------------------- */}
+            <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Distribution of Number of Records</Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        {/* <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button> */}
+                        {/* <div> */}
+                        <IconButton
+                          aria-label='Add project'
+                          size='large'
+                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                          onClick={handleClickFeatureImportances}
+                        >
+                          <div>{!showFeatureImportances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                          <div>{showFeatureImportances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                        </IconButton>
+                        {/* </div> */}
+                        {/* <div>
+              <IconButton
+                aria-label='Add project'
+                size='large'
+                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
+                onClick={handleClickFeatureImportances}
+              >
+                <IoIosArrowDropdownCircle fontSize='inherit' />
+              </IconButton>
+              </div> */}
+                      </Col>
+                    </Row>
+                    {!isChartLoading && showFeatureImportances && <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'></Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button>
+                      </Col>
+                    </Row>}
+                  </Container>
+                  {/* <p className='card-category'></p> */}
+                </Card.Header>
+                {showFeatureImportances && isChartLoading && (
+                  <div className="loadingcontainer">
+                    <AiOutlineLoading className="loadingicon" />
+                    <p style={{ paddingTop: '20px' }}>Loading...</p>
+                  </div>
+                )}
+                {!isChartLoading && showFeatureImportances && <Card.Body>
+                  <div
+                    style={{ padding: '20px', width: '100%', height: '100%' }}
+                  >
+                    <div style={{ display: 'flex' }}>
+                      <p style={{ textAlign: 'center', writingMode: 'tb-rl', transform: 'rotate(-180deg)' }}>Number of Records</p>
+                      <Bar ref={ref} options={options} data={data1} />
+                    </div>
+                    <p style={{ textAlign: 'center' }}>Class Labels</p>
+                  </div>
+                </Card.Body>}
+                <Card.Footer>
+                  {/* <div className='legend'>
+                  <i className='fas fa-circle text-info'></i>
+                  Open <i className='fas fa-circle text-danger'></i>
+                  Click <i className='fas fa-circle text-warning'></i>
+                  Click Second Time
+                </div> */}
+                  {/* <hr></hr>
+                <div className='stats'>
+                  <i className='fas fa-history'></i>
+                  Updated 3 minutes ago
+                </div> */}
+                </Card.Footer>
+              </Card>
+            </Col>
+          </Row>)}
+
+          {showPreprocessing && (<Row className='justify-content-md-center'>
             <Col md='12'>
               <Card>
                 <Card.Header>
@@ -367,157 +565,63 @@ function Dashboard() {
                 </Card.Footer>
               </Card>
             </Col>
-            <Col md='12'>
-              <Card>
-                <Card.Header>
-                  <Container>
-                    <Row>
-                      <Col sm={8}>
-                        <Card.Title as='h4'>Feature importances</Card.Title>
-                      </Col>
-                      <Col
-                        sm={4}
-                        style={{ display: 'flex', justifyContent: 'right' }}
-                      >
-                        {/* <Button type='button' onClick={downloadImage}>
-                          Download
-                        </Button> */}
-                        {/* <div> */}
-                        <IconButton
-                          aria-label='Add project'
-                          size='large'
-                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
-                          onClick={handleClickFeatureImportances}
-                        >
-                          <div>{!showFeatureImportances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
-                          <div>{showFeatureImportances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
-                        </IconButton>
-                        {/* </div> */}
-                        {/* <div>
-              <IconButton
-                aria-label='Add project'
-                size='large'
-                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
-                onClick={handleClickFeatureImportances}
+          </Row>)}
+
+          {!showPreprocessing && (<Container style={{ marginInlineEnd: '0px', paddingBlockEnd: '50px' }}>
+            <Row>
+              <Col
+                sm={12}
+                style={{ display: 'flex', justifyContent: 'right' }}
               >
-                <IoIosArrowDropdownCircle fontSize='inherit' />
-              </IconButton>
-              </div> */}
-                      </Col>
-                    </Row>
-                    {!isLoading && showFeatureImportances && <Row>
-                      <Col sm={8}>
-                        <Card.Title as='h4'></Card.Title>
-                      </Col>
-                      <Col
-                        sm={4}
-                        style={{ display: 'flex', justifyContent: 'right' }}
-                      >
-                        <Button type='button' onClick={downloadImage}>
-                          Download
-                        </Button>
-                      </Col>
-                    </Row>}
-                  </Container>
-                  {/* <p className='card-category'></p> */}
-                </Card.Header>
-                {showFeatureImportances && isLoading && (
-                  <div className="loadingcontainer">
-                    <AiOutlineLoading className="loadingicon" />
-                    <p style={{paddingTop: '20px'}}>Loading...</p>
-                  </div>
-                )}
-                {!isLoading && showFeatureImportances && <Card.Body>
-                  <div
-                    style={{ padding: '20px', width: '100%', height: '100%' }}
+                <Button type='button' onClick={handleShowPreprocessing} style={{ paddingLeft: '20px', color: 'white' }}>
+                  NEXT
+                  <IconButton
+                    aria-label='Add project'
+                    size='medium'
+                    style={{ color: 'white' }}
                   >
-                    <Bar ref={ref} options={options} data={data1} />
-                  </div>
-                </Card.Body>}
-                <Card.Footer>
-                  {/* <div className='legend'>
-                  <i className='fas fa-circle text-info'></i>
-                  Open <i className='fas fa-circle text-danger'></i>
-                  Click <i className='fas fa-circle text-warning'></i>
-                  Click Second Time
-                </div> */}
-                  {/* <hr></hr>
-                <div className='stats'>
-                  <i className='fas fa-history'></i>
-                  Updated 3 minutes ago
-                </div> */}
-                </Card.Footer>
-              </Card>
-            </Col>
-            {/* ---------------------------------------------------------------------------- */}
-            <Col md='12'>
-              <Card>
-                <Card.Header>
-                  <Container>
-                    <Row>
-                      <Col sm={8}>
-                        <Card.Title as='h4'>Number of occurrences</Card.Title>
-                      </Col>
-                      {/* <Col> */}
+                    <AiOutlineArrowRight fontSize='inherit' />
+                  </IconButton>
+                </Button>
+              </Col>
+            </Row>
+          </Container>)}
 
-                      <Col
-                        sm={4}
-                        style={{ display: 'flex', justifyContent: 'right' }}
-                      >
-                        {/* <Button type='button' onClick={downloadImage}>
-                          Download
-                        </Button> */}
-                        {/* <div> */}
-                        <IconButton
-                          aria-label='Add project'
-                          size='large'
-                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
-                          onClick={handleClickShowOccurrances}
-                        >
-                          <div>{!showOccurrances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
-                          <div>{showOccurrances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
-                        </IconButton>
-                        {/* </div> */}
-                        {/* <div>
-              <IconButton
-                aria-label='Add project'
-                size='large'
-                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
-                onClick={handleClickFeatureImportances}
+          {showPreprocessing && (<Container>
+            <Row>
+              <Col
+                // sm={2}
+                style={{ display: 'flex', justifyContent: 'left', marginInlineStart: '-10px' }}
               >
-                <IoIosArrowDropdownCircle fontSize='inherit' />
-              </IconButton>
-              </div> */}
-                      </Col>
+                <Button type='button' onClick={handleShowPreprocessing} style={{ color: 'white' }}>
+                  <IconButton
+                    aria-label='Add project'
+                    size='small'
+                    style={{ color: 'white' }}
+                  >
+                    <AiOutlineArrowLeft fontSize='inherit' />
+                  </IconButton>
+                  BACK
+                </Button>
+              </Col>
 
-                      {/* </Col> */}
-                    </Row>
-                  </Container>
-                  {/* <p className='card-category'></p> */}
-                </Card.Header>
-                {showOccurrances && isLoading && (
-                  <div className="loadingcontainer">
-                    <AiOutlineLoading className="loadingicon" />
-                    <p style={{paddingTop: '20px'}}>Loading...</p>
-                  </div>
-                )}
-                {!isLoading && showOccurrances && <Card.Body>
-                  <ThemeProvider theme={defaultMaterialTheme}>
-                    <MaterialTable
-                      icons={tableIcons}
-                      options={{
-                        exportButton: true,
-                        exportAllData: true,
-                      }}
-                      columns={columns}
-                      data={tableData}
-                      title={window.dataset_name}
-                    />
-                  </ThemeProvider>
-                </Card.Body>}
-              </Card>
-            </Col>
-          </Row>
+              <Col
+                sm={12}
+                style={{ display: 'flex', justifyContent: 'center', marginInlineEnd: '-10px' }}
+              >
+                <Button type='button' onClick={navigateToTrainingPage} style={{ color: 'white', paddingInline: '20px' }}>
+                  SUBMIT
+                  {/* <IconButton
+                          aria-label='Add project'
+                          size='small'
+                          style={{ color: 'white' }}
+                        >
+                          <AiOutlineArrowRight fontSize='inherit' />
+                        </IconButton> */}
+                </Button>
+              </Col>
+            </Row>
+          </Container>)}
         </Container>
       )}
     </>
