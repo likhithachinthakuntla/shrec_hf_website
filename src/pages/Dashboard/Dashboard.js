@@ -26,10 +26,20 @@ function Dashboard() {
   const [isChartLoading, setIsChartLoading] = useState(true);
   const [isCardLoading, setIsCardLoading] = useState(true);
   const [showPreprocessing, setShowPreprocessing] = useState(false);
+  const [showStopWordCountGraph, setShowStopWordCountGraph] = useState(false);
+  const [showNGramCountGraph, setShowNGramCountGraph] = useState(false);
   const navigate = useNavigate();
 
   const handleClickFeatureImportances = () => {
     setShowFeatureImportances(!showFeatureImportances);
+  }
+
+  const handleClickStopWords = () => {
+    setShowStopWordCountGraph(!showStopWordCountGraph);
+  }
+
+  const handleClickNGram = () => {
+    setShowNGramCountGraph(!showNGramCountGraph);
   }
 
   const handleClickShowOccurrances = () => {
@@ -67,6 +77,8 @@ function Dashboard() {
         const data = await response.json();
         setBarChartData(JSON.parse(data.bar_graph_json));
         setTableData(JSON.parse(data.data_summary_json));
+        setStopWordChartData(JSON.parse(data.top_stop_words_json));
+        setNGramChartData(JSON.parse(data.top_two_grams_json));
         setIsChartLoading(false);
       } catch (error) {
         setBarChartData([]);
@@ -138,7 +150,9 @@ function Dashboard() {
   // ------------------------------------------------------------
   // HORIZONTAL BAR CHART
   // ------------------------------------------------------------
-  let ref = useRef(null);
+  let ref1 = useRef(null);
+  let ref2 = useRef(null);
+  let ref3 = useRef(null);
 
   const options = {
     // indexAxis: 'y',
@@ -165,7 +179,7 @@ function Dashboard() {
     labels: barChartData.map((x) => x.label),
     datasets: [
       {
-        label: '',
+        label: 'Count',
         data: barChartData.map((x) => x.counts),
         fill: true,
         backgroundColor: 'rgba(6, 156,51, .3)',
@@ -183,10 +197,75 @@ function Dashboard() {
     ],
   };
 
-  const downloadImage = useCallback(() => {
+  const [stopWordChartData, setStopWordChartData] = useState([]);
+
+  const data2 = {
+    labels: stopWordChartData.map((x) => x.stop_word),
+    datasets: [
+      {
+        label: 'Count',
+        data: stopWordChartData.map((x) => x.count),
+        fill: true,
+        backgroundColor: 'rgba(6, 156,51, .3)',
+        borderColor: '#02b844',
+      },
+      // {
+      //   label: 'Stock',
+      //   backgroundColor: 'rgba(255,99,132,0.2)',
+      //   borderColor: 'rgba(255,99,132,1)',
+      //   borderWidth: 1,
+      //   hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      //   hoverBorderColor: 'rgba(255,99,132,1)',
+      //   data: barChartData.map((x) => x.stock),
+      // },
+    ],
+  };
+
+  const [nGramChartData, setNGramChartData] = useState([]);
+
+  const data3 = {
+    labels: nGramChartData.map((x) => x.n_gram),
+    datasets: [
+      {
+        label: 'Count',
+        data: nGramChartData.map((x) => x.count),
+        fill: true,
+        backgroundColor: 'rgba(6, 156,51, .3)',
+        borderColor: '#02b844',
+      },
+      // {
+      //   label: 'Stock',
+      //   backgroundColor: 'rgba(255,99,132,0.2)',
+      //   borderColor: 'rgba(255,99,132,1)',
+      //   borderWidth: 1,
+      //   hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      //   hoverBorderColor: 'rgba(255,99,132,1)',
+      //   data: barChartData.map((x) => x.stock),
+      // },
+    ],
+  };
+
+  const downloadImage1 = useCallback(() => {
+    debugger;
     const link = document.createElement('a');
     link.download = 'chart.png';
-    link.href = ref.current.toBase64Image();
+    link.href = ref1.current.toBase64Image();
+    link.click();
+  }, []);
+
+  const downloadImage2 = useCallback(() => {
+    debugger;
+    const link = document.createElement('a');
+    link.download = 'chart.png';
+    link.href = ref2.current.toBase64Image();
+    link.click();
+  }, []);
+
+  const downloadImage3 = useCallback(() => {
+    debugger;
+    const link = document.createElement('a');
+    link.download = 'chart.png';
+    link.href = ref3.current.toBase64Image();
     link.click();
   }, []);
 
@@ -469,7 +548,7 @@ function Dashboard() {
                         sm={4}
                         style={{ display: 'flex', justifyContent: 'right' }}
                       >
-                        <Button type='button' onClick={downloadImage}>
+                        <Button type='button' onClick={downloadImage1}>
                           Download
                         </Button>
                       </Col>
@@ -489,9 +568,181 @@ function Dashboard() {
                   >
                     <div style={{ display: 'flex' }}>
                       <p style={{ textAlign: 'center', writingMode: 'tb-rl', transform: 'rotate(-180deg)' }}>Number of Records</p>
-                      <Bar ref={ref} options={options} data={data1} />
+                      <Bar ref={ref1} options={options} data={data1} />
                     </div>
                     <p style={{ textAlign: 'center' }}>Class Labels</p>
+                  </div>
+                </Card.Body>}
+                <Card.Footer>
+                  {/* <div className='legend'>
+                  <i className='fas fa-circle text-info'></i>
+                  Open <i className='fas fa-circle text-danger'></i>
+                  Click <i className='fas fa-circle text-warning'></i>
+                  Click Second Time
+                </div> */}
+                  {/* <hr></hr>
+                <div className='stats'>
+                  <i className='fas fa-history'></i>
+                  Updated 3 minutes ago
+                </div> */}
+                </Card.Footer>
+              </Card>
+            </Col>
+            <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Distribution of Stop Words</Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        {/* <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button> */}
+                        {/* <div> */}
+                        <IconButton
+                          aria-label='Add project'
+                          size='large'
+                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                          onClick={handleClickStopWords}
+                        >
+                          <div>{!showStopWordCountGraph && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                          <div>{showStopWordCountGraph && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                        </IconButton>
+                        {/* </div> */}
+                        {/* <div>
+              <IconButton
+                aria-label='Add project'
+                size='large'
+                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
+                onClick={handleClickFeatureImportances}
+              >
+                <IoIosArrowDropdownCircle fontSize='inherit' />
+              </IconButton>
+              </div> */}
+                      </Col>
+                    </Row>
+                    {!isChartLoading && showStopWordCountGraph && <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'></Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        <Button type='button' onClick={downloadImage2}>
+                          Download
+                        </Button>
+                      </Col>
+                    </Row>}
+                  </Container>
+                  {/* <p className='card-category'></p> */}
+                </Card.Header>
+                {showStopWordCountGraph && isChartLoading && (
+                  <div className="loadingcontainer">
+                    <AiOutlineLoading className="loadingicon" />
+                    <p style={{ paddingTop: '20px' }}>Loading...</p>
+                  </div>
+                )}
+                {!isChartLoading && showStopWordCountGraph && <Card.Body>
+                  <div
+                    style={{ padding: '20px', width: '100%', height: '100%' }}
+                  >
+                    <div style={{ display: 'flex' }}>
+                      <p style={{ textAlign: 'center', writingMode: 'tb-rl', transform: 'rotate(-180deg)' }}>Number of Words</p>
+                      <Bar ref={ref2} options={options} data={data2} />
+                    </div>
+                    <p style={{ textAlign: 'center' }}>Stop Words</p>
+                  </div>
+                </Card.Body>}
+                <Card.Footer>
+                  {/* <div className='legend'>
+                  <i className='fas fa-circle text-info'></i>
+                  Open <i className='fas fa-circle text-danger'></i>
+                  Click <i className='fas fa-circle text-warning'></i>
+                  Click Second Time
+                </div> */}
+                  {/* <hr></hr>
+                <div className='stats'>
+                  <i className='fas fa-history'></i>
+                  Updated 3 minutes ago
+                </div> */}
+                </Card.Footer>
+              </Card>
+            </Col>
+            <Col md='12'>
+              <Card>
+                <Card.Header>
+                  <Container>
+                    <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'>Distribution of bi-grams</Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        {/* <Button type='button' onClick={downloadImage}>
+                          Download
+                        </Button> */}
+                        {/* <div> */}
+                        <IconButton
+                          aria-label='Add project'
+                          size='large'
+                          style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                          onClick={handleClickNGram}
+                        >
+                          <div>{!showNGramCountGraph && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                          <div>{showNGramCountGraph && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                        </IconButton>
+                        {/* </div> */}
+                        {/* <div>
+              <IconButton
+                aria-label='Add project'
+                size='large'
+                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px'}}
+                onClick={handleClickFeatureImportances}
+              >
+                <IoIosArrowDropdownCircle fontSize='inherit' />
+              </IconButton>
+              </div> */}
+                      </Col>
+                    </Row>
+                    {!isChartLoading && showNGramCountGraph && <Row>
+                      <Col sm={8}>
+                        <Card.Title as='h4'></Card.Title>
+                      </Col>
+                      <Col
+                        sm={4}
+                        style={{ display: 'flex', justifyContent: 'right' }}
+                      >
+                        <Button type='button' onClick={downloadImage3}>
+                          Download
+                        </Button>
+                      </Col>
+                    </Row>}
+                  </Container>
+                  {/* <p className='card-category'></p> */}
+                </Card.Header>
+                {showNGramCountGraph && isChartLoading && (
+                  <div className="loadingcontainer">
+                    <AiOutlineLoading className="loadingicon" />
+                    <p style={{ paddingTop: '20px' }}>Loading...</p>
+                  </div>
+                )}
+                {!isChartLoading && showNGramCountGraph && <Card.Body>
+                  <div
+                    style={{ padding: '20px', width: '100%', height: '100%' }}
+                  >
+                    <div style={{ display: 'flex' }}>
+                      <p style={{ textAlign: 'center', writingMode: 'tb-rl', transform: 'rotate(-180deg)' }}>Number of Occurrences</p>
+                      <Bar ref={ref3} options={options} data={data3} />
+                    </div>
+                    <p style={{ textAlign: 'center' }}>bi-grams</p>
                   </div>
                 </Card.Body>}
                 <Card.Footer>
