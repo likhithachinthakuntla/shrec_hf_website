@@ -11,9 +11,15 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
+    title: 'What you want?',
+    path: '/pipeline_selection',
+    icon: <GiGears.GiChoice />,
+    cName: 'nav-text'
+  },
+  {
     title: 'How It Works',
     path: '/mla_Info',
-    icon: <IoIcons.IoIosPaper />,
+    icon: <AiIcons.AiFillSetting />,
     cName: 'nav-text'
   },
   {

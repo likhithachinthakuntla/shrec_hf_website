@@ -25,3 +25,10 @@
   font-size: 24px;
   margin-right: 8px;
 }
+
+.dropdown-pos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block-end: 30px;
+}

@@ -66,6 +66,24 @@ class FetchDatasets:
             self.debug_print("==================================================\n")
             if i == 100:
                 break
+
+    def showSubDatasetsForDataset(self,dataset_name):
+        
+        url = f"https://datasets-server.huggingface.co/splits?dataset={dataset_name}"
+        
+        response = requests.get(url)
+        
+        subsets = []
+        
+        if response.status_code == 200 :
+            
+            response_subsets = response.json()['splits']
+            
+            for i in range(0, len(response_subsets)):
+                if (response_subsets[i]['config'] not in subsets and response_subsets[i]['split'] == 'train'):
+                    subsets.append(response_subsets[i]['config'])
+                
+            return subsets if len(subsets) > 1 else []
     
     """
     Categorize Datasets based on certogories like task, license etc.
@@ -84,6 +102,7 @@ class FetchDatasets:
     def register_routes(self):
         self.fetchDatasets.add_url_rule('/getAllDatasets', 'getAllDatasets', self.getAllDatasets)
         self.fetchDatasets.add_url_rule('/getDatasetStats', 'getDatasetStats', self.getDatasetStats)
+        self.fetchDatasets.add_url_rule('/showSubDatasetsForDataset', 'showSubDatasetsForDataset', self.showSubDatasetsForDataset)
 
 if __name__ == '__main__':
     ds = FetchDatasets('yelp_review_full',logger=None)

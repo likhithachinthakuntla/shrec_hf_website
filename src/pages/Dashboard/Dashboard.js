@@ -13,10 +13,11 @@ import tableIcons from './MaterialTableIcons';
 import InProgress from '../../components/In_Progress_page/In_Progress_Page';
 import { Checkbox } from '@material-ui/core';
 import { blue } from "@material-ui/core/colors";
-import { IconButton } from '@mui/material';
+import { IconButton, Grid } from '@mui/material';
 import { IoIosArrowDropdownCircle, IoIosArrowDropleftCircle } from "react-icons/io";
 import { AiOutlineLoading, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import Dropdown from '../../components/Dropdown/dropdown';
 
 function Dashboard() {
 
@@ -30,6 +31,9 @@ function Dashboard() {
   const [showNGramCountGraph, setShowNGramCountGraph] = useState(false);
   const navigate = useNavigate();
 
+  const subsetData = [{value: 'value1', label: 'label1'},{value: 'value2', label: 'label2'},{value: 'value3', label: 'label3'},{value: 'value4', label: 'label4'},{value: 'value5', label: 'label5'},{value: 'value6', label: 'label6'},{value: 'value7', label: 'label7'},{value: 'value8', label: 'label8'},{value: 'value9', label: 'label9'},{value: 'value10', label: 'label10'}];
+
+  const [selectedSubsetInfo, setSelectedSubsetInfo] = useState(subsetData[0]);
   const handleClickFeatureImportances = () => {
     setShowFeatureImportances(!showFeatureImportances);
   }
@@ -50,9 +54,13 @@ function Dashboard() {
     setShowPreprocessing(!showPreprocessing);
   }
 
+  const handleSubsetSelectedData = (id, eventData) => {
+    setSelectedSubsetInfo(eventData);
+  }
+
   const navigateToTrainingPage = () => {
     //Uncomment below code - once training page is ready
-    // navigate('/training');
+    navigate('/training');
   }
   useEffect(() => {
     async function getDatasetStats() {
@@ -432,6 +440,10 @@ function Dashboard() {
           </Row>)}
 
           {/* // --------------------------------------------------------------------------------------- */}
+
+          {!showPreprocessing && <Grid className='dropdown-pos'>
+            <Dropdown placeholder='Subset' options={subsetData} id='Subset' handleSelectedData={handleSubsetSelectedData} selectedOption={selectedSubsetInfo} />
+          </Grid>}
 
           {!showPreprocessing && (<Row className='justify-content-md-center'>
             <Col md='12'>
@@ -818,7 +830,7 @@ function Dashboard() {
             </Col>
           </Row>)}
 
-          {!showPreprocessing && (<Container style={{ marginInlineEnd: '0px', paddingBlockEnd: '50px' }}>
+          {window.ETLPipeline && !showPreprocessing && (<Container style={{ marginInlineEnd: '0px', paddingBlockEnd: '50px' }}>
             <Row>
               <Col
                 sm={12}

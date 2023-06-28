@@ -10,7 +10,7 @@ function Popup(props) {
   const navigate = useNavigate();
   
   const userInputsPage = () => {
-      navigate('/userInputs');
+      navigate('/pipeline_selection');
   }
 
   const [inputValue, setInputValue] = useState('');

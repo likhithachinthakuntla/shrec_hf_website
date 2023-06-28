@@ -120,13 +120,13 @@ const UserInput = () => {
   const getSelectedData = (key) => {
     if(key==0) {
       return selectedEtlData;
-  } else if (key==1) {
-    return selectedModelTrainingData;
-  } else if (key==2) {
-    return selectedTrainingFrameworkData;
-  } else if (key==3) {
-    return selectedInfrastructureData;
-  }
+    } else if (key==1) {
+      return selectedModelTrainingData;
+    } else if (key==2) {
+      return selectedTrainingFrameworkData;
+    } else if (key==3) {
+      return selectedInfrastructureData;
+    }
   }
 
   useEffect(() => {

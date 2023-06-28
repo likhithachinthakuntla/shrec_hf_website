@@ -11,9 +11,13 @@ import {
   LinearScale,
   PointElement,
 } from 'chart.js';
+import { IconButton } from '@mui/material';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 function Training() {
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch Data to be populated in the table
     // fetch('https://jsonplaceholder.typicode.com/users')
@@ -77,6 +81,11 @@ function Training() {
       // },
     ],
   };
+
+  const handleInferencePage = () => {
+    navigate('/inference');
+  }
+
   return (
     <>
       <Container fluid className='background2'>
@@ -118,6 +127,25 @@ function Training() {
             </Card>
           </Col>
         </Row>
+        {/* <Container style={{ marginInlineEnd: '0px', paddingBlockEnd: '50px' }}> */}
+            <Row>
+              <Col
+                sm={12}
+                style={{ display: 'flex', justifyContent: 'right' }}
+              >
+                <Button type='button' onClick={handleInferencePage}  style={{ paddingLeft: '20px', color: 'white' }}>
+                  NEXT
+                  <IconButton
+                    aria-label='Add project'
+                    size='medium'
+                    style={{ color: 'white' }}
+                  >
+                    <AiOutlineArrowRight fontSize='inherit' />
+                  </IconButton>
+                </Button>
+              </Col>
+            </Row>
+          {/* </Container> */}
       </Container>
     </>
   );

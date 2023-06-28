@@ -30,5 +30,10 @@ def get_ETL_data():
     dataset_name = request.args.get('dataset_name')
     result = visualizer_routes.getETLData(dataset_name)
     return result
+@app.route('/showSubDatasetsForDataset/')
+def show_sub_datasets_for_dataset():
+    dataset_name = request.args.get('dataset_name')
+    result = fetchDatasets_routes.showSubDatasetsForDataset(dataset_name)
+    return result
 if __name__ == '__main__':
     app.run()
