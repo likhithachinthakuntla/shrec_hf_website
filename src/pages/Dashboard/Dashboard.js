@@ -24,16 +24,24 @@ function Dashboard() {
   const [cardData, setCardData] = useState({ Name: '', Size: '', NumInstances: '', type: '' });
   const [showFeatureImportances, setShowFeatureImportances] = useState(false);
   const [showOccurrances, setShowOccurrances] = useState(false);
-  const [isChartLoading, setIsChartLoading] = useState(true);
+  // const [isChartLoading, setIsChartLoading] = useState(true);
   const [isCardLoading, setIsCardLoading] = useState(true);
   const [showPreprocessing, setShowPreprocessing] = useState(false);
   const [showStopWordCountGraph, setShowStopWordCountGraph] = useState(false);
   const [showNGramCountGraph, setShowNGramCountGraph] = useState(false);
+  const [initialRender, setInitialRender] = useState(true);
+  const [graphsRender, setGraphsRender] = useState(false);
+  const [isTableData, setIsTableData] = useState(true);
+  const [isBarChartData, setIsBarChartData] = useState(true);
+  const [isStopWordChartData, setIsStopWordChartData] = useState(true);
+  const [isNGramChartData, setIsNGramChartData] = useState(true);
   const navigate = useNavigate();
 
-  const subsetData = [{value: 'value1', label: 'label1'},{value: 'value2', label: 'label2'},{value: 'value3', label: 'label3'},{value: 'value4', label: 'label4'},{value: 'value5', label: 'label5'},{value: 'value6', label: 'label6'},{value: 'value7', label: 'label7'},{value: 'value8', label: 'label8'},{value: 'value9', label: 'label9'},{value: 'value10', label: 'label10'}];
+  // const subsetData = [{value: 'value1', label: 'label1'},{value: 'value2', label: 'label2'},{value: 'value3', label: 'label3'},{value: 'value4', label: 'label4'},{value: 'value5', label: 'label5'},{value: 'value6', label: 'label6'},{value: 'value7', label: 'label7'},{value: 'value8', label: 'label8'},{value: 'value9', label: 'label9'},{value: 'value10', label: 'label10'}];
 
-  const [selectedSubsetInfo, setSelectedSubsetInfo] = useState(subsetData[0]);
+  const [selectedSubset, setSelectedSubset] = useState({label: '', value:''});
+  const [subsetData, setSubsetData] = useState([]);
+  
   const handleClickFeatureImportances = () => {
     setShowFeatureImportances(!showFeatureImportances);
   }
@@ -55,47 +63,151 @@ function Dashboard() {
   }
 
   const handleSubsetSelectedData = (id, eventData) => {
-    setSelectedSubsetInfo(eventData);
+    setSelectedSubset(eventData);
   }
 
   const navigateToTrainingPage = () => {
     //Uncomment below code - once training page is ready
     navigate('/training');
   }
+
+  async function getDatasetStats() {
+    try {
+      const reqUrl = window.subsetData && window.subsetData.length>0 ? `/getDatasetStats/?project_id=${window.project_id}&dataset_name=${window.dataset_name}&subset_name=${window.subsetData[0]}` : `/getDatasetStats/?project_id=${window.project_id}&dataset_name=${window.dataset_name}&subset_name=null`;
+      const response = await fetch(reqUrl);
+      const data = await response.json();
+      // setSelectedSubset(window.subsetData);
+      setCardData(data);
+      setGraphsRender(true);
+      setIsCardLoading(false);
+    } catch (error) {
+      setCardData({ Name: '--', Size: '--', NumInstances: '--', type: '--' });
+      setIsCardLoading(false);
+    }
+  }
+
   useEffect(() => {
-    async function getDatasetStats() {
-      try {
-        const response = await fetch(`/getDatasetStats/?dataset_name=${window.dataset_name}`);
-        const data = await response.json();
-        setCardData(data);
-        setIsCardLoading(false);
-      } catch (error) {
-        setCardData({ Name: '--', Size: '--', NumInstances: '--', type: '--' });
-        setIsCardLoading(false);
-      }
+    if(window.subsetData && window.subsetData.length>0) {
+      const subsetArray = Object.values(window.subsetData).map((item) => {
+        return { value: item, label: item };
+      });
+      debugger;
+      setSubsetData(subsetArray);
+      setSelectedSubset(subsetArray[0]);
     }
     getDatasetStats();
   }, []);
 
-  useEffect(() => {
-    async function getGraphsData() {
-      try {
-        // const response = await fetch(`/getETLData/?dataset_name=yelp_review_full`);
-        const response = await fetch(`/getETLData/?dataset_name=${window.dataset_name}`);
-        const data = await response.json();
-        setBarChartData(JSON.parse(data.bar_graph_json));
-        setTableData(JSON.parse(data.data_summary_json));
-        setStopWordChartData(JSON.parse(data.top_stop_words_json));
-        setNGramChartData(JSON.parse(data.top_two_grams_json));
-        setIsChartLoading(false);
-      } catch (error) {
-        setBarChartData([]);
-        setTableData([]);
-        setIsChartLoading(false);
-      }
+  async function getDatasetStatsAgain() {
+    try {
+      const reqUrl = window.subsetData && window.subsetData.length>0 ? `/getDatasetStats/?project_id=${window.project_id}&dataset_name=${window.dataset_name}&subset_name=${selectedSubset.value}` : `/getDatasetStats/?project_id=${window.project_id}&dataset_name=${window.dataset_name}&subset_name=null`;
+      const response = await fetch(reqUrl);
+      const data = await response.json();
+      // setSelectedSubset(window.subsetData);
+      setCardData(data);
+      setGraphsRender(true);
+      setIsCardLoading(false);
+    } catch (error) {
+      setCardData({ Name: '--', Size: '--', NumInstances: '--', type: '--' });
+      setIsCardLoading(false);
     }
-    getGraphsData();
-  }, []);
+  }
+
+  useEffect(() => {
+    if(!initialRender && selectedSubset) {
+      setIsCardLoading(true);
+      setIsTableData(true);
+      setIsBarChartData(true);
+      setIsStopWordChartData(true);
+      setIsNGramChartData(true);
+      getDatasetStatsAgain();
+    } else {
+      setInitialRender(false);
+    }
+  }, [selectedSubset, initialRender]);
+
+  // useEffect(() => {
+  //   async function getGraphsData() {
+  //     try {
+  //       // const response = await fetch(`/getETLData/?dataset_name=yelp_review_full`);
+  //       const response = await fetch(`/getETLData/?dataset_name=${window.dataset_name}`);
+  //       const data = await response.json();
+  //       setBarChartData(JSON.parse(data.bar_graph_json));
+  //       setTableData(JSON.parse(data.data_summary_json));
+  //       setStopWordChartData(JSON.parse(data.top_stop_words_json));
+  //       setNGramChartData(JSON.parse(data.top_two_grams_json));
+  //       setIsChartLoading(false);
+  //     } catch (error) {
+  //       setBarChartData([]);
+  //       setTableData([]);
+  //       setIsChartLoading(false);
+  //     }
+  //   }
+  //   getGraphsData();
+  // }, []);
+
+
+  async function getTableData() {
+    try {
+      const reqUrl = subsetData && subsetData.length > 0 ? `/getDataSummary/?project_id=${window.project_id}&subset_name=${selectedSubset.value}` : `/getDataSummary/?project_id=${window.project_id}&subset_name=null`;
+      const response = await fetch(reqUrl);
+      const data = await response.json();
+      setTableData(data);
+      setIsTableData(false);
+    } catch(error) {
+      debugger;
+      setTableData([]);
+      setIsTableData(false);
+    }
+  }
+
+  async function getBarChartData() {
+    try {
+      const reqUrl = subsetData && subsetData.length > 0 ? `/getClassDistribution/?project_id=${window.project_id}&subset_name=${selectedSubset.value}` : `/getClassDistribution/?project_id=${window.project_id}&subset_name=null`;
+      const response = await fetch(reqUrl);
+      const data = await response.json();
+      setBarChartData(data);
+      setIsBarChartData(false);
+    } catch(error) {
+      setBarChartData([]);
+      setIsBarChartData(false);
+    }
+  }
+  async function getStopWordChartData() {
+    try {
+      const reqUrl = subsetData && subsetData.length > 0 ? `/plotTopStopWords/?project_id=${window.project_id}&subset_name=${selectedSubset.value}` : `/plotTopStopWords/?project_id=${window.project_id}&subset_name=null`;
+      const response = await fetch(reqUrl);
+      const data = await response.json();
+      setStopWordChartData(data);
+      setIsStopWordChartData(false);
+    } catch(error) {
+      setStopWordChartData([]);
+      setIsStopWordChartData(false);
+    }
+  }
+  async function getNGramChartData() {
+    try {
+      const reqUrl = subsetData && subsetData.length > 0 ? `/getTopngram/?project_id=${window.project_id}&subset_name=${selectedSubset.value}` : `/getTopngram/?project_id=${window.project_id}&subset_name=null`;
+      const response = await fetch(reqUrl);
+      const data = await response.json();
+      setNGramChartData(data);
+      setIsNGramChartData(false);
+    } catch(error) {
+      setNGramChartData([]);
+      setIsNGramChartData(false);
+    }
+  }
+
+  useEffect(() => {
+    debugger;
+    if(graphsRender) {
+      getTableData();
+      getBarChartData();
+      getStopWordChartData();
+      getNGramChartData();
+      setGraphsRender(false);
+    }
+  }, [selectedSubset, graphsRender]);
 
   const checkboxOptions = [
     { id: 1, label: "Remove Punctuations" },
@@ -254,7 +366,6 @@ function Dashboard() {
   };
 
   const downloadImage1 = useCallback(() => {
-    debugger;
     const link = document.createElement('a');
     link.download = 'chart.png';
     link.href = ref1.current.toBase64Image();
@@ -262,7 +373,6 @@ function Dashboard() {
   }, []);
 
   const downloadImage2 = useCallback(() => {
-    debugger;
     const link = document.createElement('a');
     link.download = 'chart.png';
     link.href = ref2.current.toBase64Image();
@@ -270,7 +380,6 @@ function Dashboard() {
   }, []);
 
   const downloadImage3 = useCallback(() => {
-    debugger;
     const link = document.createElement('a');
     link.download = 'chart.png';
     link.href = ref3.current.toBase64Image();
@@ -441,8 +550,8 @@ function Dashboard() {
 
           {/* // --------------------------------------------------------------------------------------- */}
 
-          {!showPreprocessing && <Grid className='dropdown-pos'>
-            <Dropdown placeholder='Subset' options={subsetData} id='Subset' handleSelectedData={handleSubsetSelectedData} selectedOption={selectedSubsetInfo} />
+          {selectedSubset && selectedSubset.value!='' && !showPreprocessing && <Grid className='dropdown-pos'>
+            <Dropdown placeholder='Subset' options={subsetData} id='Subset' handleSelectedData={handleSubsetSelectedData} selectedOption={selectedSubset} />
           </Grid>}
 
           {!showPreprocessing && (<Row className='justify-content-md-center'>
@@ -491,13 +600,13 @@ function Dashboard() {
                   </Container>
                   {/* <p className='card-category'></p> */}
                 </Card.Header>
-                {showOccurrances && isChartLoading && (
+                {showOccurrances && isTableData && (
                   <div className="loadingcontainer">
                     <AiOutlineLoading className="loadingicon" />
                     <p style={{ paddingTop: '20px' }}>Loading...</p>
                   </div>
                 )}
-                {!isChartLoading && showOccurrances && <Card.Body>
+                {!isTableData && showOccurrances && <Card.Body>
                   <ThemeProvider theme={defaultMaterialTheme}>
                     <MaterialTable
                       icons={tableIcons}
@@ -552,7 +661,7 @@ function Dashboard() {
               </div> */}
                       </Col>
                     </Row>
-                    {!isChartLoading && showFeatureImportances && <Row>
+                    {!isBarChartData && showFeatureImportances && <Row>
                       <Col sm={8}>
                         <Card.Title as='h4'></Card.Title>
                       </Col>
@@ -568,13 +677,13 @@ function Dashboard() {
                   </Container>
                   {/* <p className='card-category'></p> */}
                 </Card.Header>
-                {showFeatureImportances && isChartLoading && (
+                {showFeatureImportances && isBarChartData && (
                   <div className="loadingcontainer">
                     <AiOutlineLoading className="loadingicon" />
                     <p style={{ paddingTop: '20px' }}>Loading...</p>
                   </div>
                 )}
-                {!isChartLoading && showFeatureImportances && <Card.Body>
+                {!isBarChartData && showFeatureImportances && <Card.Body>
                   <div
                     style={{ padding: '20px', width: '100%', height: '100%' }}
                   >
@@ -638,7 +747,7 @@ function Dashboard() {
               </div> */}
                       </Col>
                     </Row>
-                    {!isChartLoading && showStopWordCountGraph && <Row>
+                    {!isStopWordChartData && showStopWordCountGraph && <Row>
                       <Col sm={8}>
                         <Card.Title as='h4'></Card.Title>
                       </Col>
@@ -654,13 +763,13 @@ function Dashboard() {
                   </Container>
                   {/* <p className='card-category'></p> */}
                 </Card.Header>
-                {showStopWordCountGraph && isChartLoading && (
+                {showStopWordCountGraph && isStopWordChartData && (
                   <div className="loadingcontainer">
                     <AiOutlineLoading className="loadingicon" />
                     <p style={{ paddingTop: '20px' }}>Loading...</p>
                   </div>
                 )}
-                {!isChartLoading && showStopWordCountGraph && <Card.Body>
+                {!isStopWordChartData && showStopWordCountGraph && <Card.Body>
                   <div
                     style={{ padding: '20px', width: '100%', height: '100%' }}
                   >
@@ -724,7 +833,7 @@ function Dashboard() {
               </div> */}
                       </Col>
                     </Row>
-                    {!isChartLoading && showNGramCountGraph && <Row>
+                    {!isNGramChartData && showNGramCountGraph && <Row>
                       <Col sm={8}>
                         <Card.Title as='h4'></Card.Title>
                       </Col>
@@ -740,13 +849,13 @@ function Dashboard() {
                   </Container>
                   {/* <p className='card-category'></p> */}
                 </Card.Header>
-                {showNGramCountGraph && isChartLoading && (
+                {showNGramCountGraph && isNGramChartData && (
                   <div className="loadingcontainer">
                     <AiOutlineLoading className="loadingicon" />
                     <p style={{ paddingTop: '20px' }}>Loading...</p>
                   </div>
                 )}
-                {!isChartLoading && showNGramCountGraph && <Card.Body>
+                {!isNGramChartData && showNGramCountGraph && <Card.Body>
                   <div
                     style={{ padding: '20px', width: '100%', height: '100%' }}
                   >

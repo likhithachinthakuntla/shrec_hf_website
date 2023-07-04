@@ -129,24 +129,33 @@ const UserInput = () => {
     }
   }
 
+  async function getAllDatasets() {
+    const response = await fetch('/getAllDatasets/');
+    const data = await response.json();
+    setEtlData(data);
+    setIsLoadingEtlData(false);
+  }
+
+  async function showSubDatasetsForDataset() {
+    const response = await fetch(`/showSubDatasetsForDataset/?dataset_name=${window.dataset_name}`);
+    const data = await response.json();
+    window.subsetData = data;
+  }
+
   useEffect(() => {
-    async function getAllDatasets() {
-      const response = await fetch('/getAllDatasets/');
-      const data = await response.json();
-      setEtlData(data);
-      setIsLoadingEtlData(false);
-    }
     getAllDatasets();
   }, [window.projectName]);
 
+  async function showModelsForDataset() {
+    const response = await fetch(`/showModelsForDataset/?dataset_name=${window.dataset_name}`);
+    const data = await response.json();
+    setModelTrainingData(data);
+    setIsLoadingModelTrainingData(false);
+  }
+
   useEffect(() => {
-    async function showModelsForDataset() {
-      const response = await fetch(`/showModelsForDataset/?dataset_name=${window.dataset_name}`);
-      const data = await response.json();
-      setModelTrainingData(data);
-      setIsLoadingModelTrainingData(false);
-    }
     showModelsForDataset();
+    showSubDatasetsForDataset();
   }, [window.dataset_name]);
 
   const handleNext = () => {

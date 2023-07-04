@@ -17,6 +17,9 @@ const Pipeline_Selection = () => {
     const handleDataAnalysis = () => {
         navigate('/userInputs');
     };
+    const handleTraining = () => {
+        navigate('/training');
+    };
     const handleInference = () => {
         navigate('/inference');
     };
@@ -33,20 +36,12 @@ const Pipeline_Selection = () => {
                             <Grid
                                 container
                                 direction="row"
-                                justifyContent="space-around"
+                                justifyContent="space-evenly"
                                 alignItems="center"
                             >
                                 <Button
                                     variant='contained'
-                                    style={{ display: 'block', margin: '0 auto', width: '300px' }}
-                                    onClick={handleETLPipeline}
-                                >
-                                    E2E Pipeline<br />
-                                    (ETL+Train+Inference)
-                                </Button>
-                                <Button
-                                    variant='contained'
-                                    style={{ display: 'block', margin: '0 auto', width: '300px' }}
+                                    style={{ display: 'block', margin: '0 auto', width: '230px' }}
                                     onClick={handleDataAnalysis}
                                 >
                                     Data Analysis<br />
@@ -54,11 +49,27 @@ const Pipeline_Selection = () => {
                                 </Button>
                                 <Button
                                     variant='contained'
-                                    style={{ display: 'block', margin: '0 auto', width: '300px' }}
+                                    style={{ display: 'block', margin: '0 auto', width: '230px' }}
+                                    onClick={handleTraining}
+                                >
+                                    Train<br />
+                                    Data
+                                </Button>
+                                <Button
+                                    variant='contained'
+                                    style={{ display: 'block', margin: '0 auto', width: '230px' }}
                                     onClick={handleInference}
                                 >
                                     Inference<br />
                                     Page
+                                </Button>
+                                <Button
+                                    variant='contained'
+                                    style={{ display: 'block', margin: '0 auto', width: '230px' }}
+                                    onClick={handleETLPipeline}
+                                >
+                                    E2E Pipeline<br />
+                                    (ETL+Train+Inference)
                                 </Button>
                             </Grid>
                         </Box>

@@ -4,13 +4,16 @@ import { IoCloseSharp } from 'react-icons/io5';
 import '../../pages/Dashboard/scss/light-bootstrap-dashboard-react.scss?v=2.0.0';
 import './Popup.css';
 import { useNavigate } from "react-router-dom";
+import { v4 as uuid } from 'uuid';
 
 function Popup(props) {
   const { onClose } = props;
   const navigate = useNavigate();
   
   const userInputsPage = () => {
-      navigate('/pipeline_selection');
+    const project_id = uuid();
+    window.project_id = project_id;
+    navigate('/pipeline_selection');
   }
 
   const [inputValue, setInputValue] = useState('');
@@ -49,7 +52,7 @@ function Popup(props) {
           <option value='videoClassification'>
             Video Classification
           </option>
-          <option value='textClassification(Multi-class)'>
+          <option value='text-classification'>
             Text Classification (Multi-class)
           </option>
         </select>

@@ -1,28 +1,25 @@
-from collections import Counter
-from datasets import list_datasets, DatasetInfo, load_dataset
+from datasets import load_dataset
 import pandas as pd
 from sklearn.impute import SimpleImputer
-from sklearn.inspection import permutation_importance
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 import seaborn as sns
-from flask import Blueprint
 import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 from collections import defaultdict
 
+import sys
+sys.path.append('..')
+print(sys.path)
+import utilities as ut
+
 stop=set(stopwords.words('english'))
 
 
 class Visualizer:
-    # def _init_(self, datasetID):
-    #     self.datasetID = datasetID
-    #     self.visualizer = Blueprint('visualizer', __name__)
-    #     pass
 
     def getFeatureInstance(self):
         
@@ -50,8 +47,9 @@ class Visualizer:
         df = pd.DataFrame(load_dataset(datasetID,split='train'))
         return df
         
-    def getDataSummary(df):
+    def getDataSummary(self,project_id, subset_name):
         
+        df = ut.utilities.getDatafromDB(project_id, subset_name)
         
         df['id'] = df.index
         
@@ -59,7 +57,7 @@ class Visualizer:
         
         return data_snapshot
 
-    def getClassDistribution(df, col):
+    def getClassDistribution(self,project_id, subset_name, col=None):
         print("Getting Class Distribution Chart..")
         #print(df[col].value_counts())
         
@@ -69,6 +67,8 @@ class Visualizer:
         plt.show()
         '''
         
+        df = ut.utilities.getDatafromDB(project_id, subset_name)
+        col = 'label'
         df_graph = df.groupby(col).size().reset_index(name='counts')
         
         graph_dict =  df_graph.to_json(orient='records') 
@@ -76,10 +76,13 @@ class Visualizer:
         return graph_dict
     
     
-    def plotTopStopWords(df):
-        corpus=[]
+    def plotTopStopWords(self,project_id, subset_name, col=None):
         
-        new = df['text'].str.split()
+        df = ut.utilities.getDatafromDB(project_id, subset_name)
+        
+        corpus=[]
+        col = df.columns[0]
+        new = df[col].str.split()
         new = new.values.tolist()
         corpus=[word for i in new for word in i]
         
@@ -95,10 +98,13 @@ class Visualizer:
         return dict_df.to_json(orient='records')
     
     
-    def getTopngram(df, n=2):
+    def getTopngram(self,project_id, subset_name, n=2, col=None):
+        
+        df = ut.utilities.getDatafromDB(project_id, subset_name)
         
         corpus=[]
-        new = df['text'].str.split()
+        col = df.columns[0]
+        new = df[col].str.split()
         new = new.values.tolist()
         corpus=[word for i in new for word in i]
         
@@ -119,35 +125,28 @@ class Visualizer:
         sns.boxplot(data = df, y=col, hue=label)
         plt.ylabel(col, labelpad=12.5)
         
-        # plt.subplot(1,2,2)
-        # sns.kdeplot(data = df, y=col, hue=label)
-        # plt.legend(df[label].unique())
-        # plt.xlabel('')
-        # plt.ylabel('')
-        
         plt.show()
 
-        # df[col].plot(
-        #                     kind='hist',
-        #                     xTitle='rating',
-        #                     linecolor='black',
-        #                     yTitle='count',
-        #                     title=title)
         return
     
-    def getETLData(self, dataset_name):
+    # def getETLData(self, dataset_name):
         
-        df = Visualizer.getData(dataset_name)
-        bar_graph_json = Visualizer.getClassDistribution(df,'label')
-        data_summary_json = Visualizer.getDataSummary(df)
-        top_stop_words_json = Visualizer.plotTopStopWords(df)
-        top_two_grams_json = Visualizer.getTopngram(df,2)
+    #     df = Visualizer.getData(dataset_name)
+    #     bar_graph_json = Visualizer.getClassDistribution(df,'label')
+    #     data_summary_json = Visualizer.getDataSummary(df)
+    #     top_stop_words_json = Visualizer.plotTopStopWords(df)
+    #     top_two_grams_json = Visualizer.getTopngram(df,2)
                 
-        return {"bar_graph_json" : bar_graph_json, "data_summary_json" : data_summary_json,\
-                "top_stop_words_json" : top_stop_words_json, "top_two_grams_json" : top_two_grams_json}
+    #     return {"bar_graph_json" : bar_graph_json, "data_summary_json" : data_summary_json,\
+    #             "top_stop_words_json" : top_stop_words_json, "top_two_grams_json" : top_two_grams_json}
     
     def register_routes(self):
-        self.visualizer.add_url_rule('/getETLData', 'getETLData', self.getETLData)
+        # self.visualizer.add_url_rule('/getETLData', 'getETLData', self.getETLData)
+        self.visualizer.add_url_rule('/getDataSummary', 'getDataSummary', self.getDataSummary)
+        self.visualizer.add_url_rule('/getClassDistribution', 'getClassDistribution', self.getClassDistribution)
+        self.visualizer.add_url_rule('/plotTopStopWords', 'plotTopStopWords', self.plotTopStopWords)
+        self.visualizer.add_url_rule('/getTopngram', 'getTopngram', self.getTopngram)
+
 
 # if __name__ == '__main__':
 #     vis = Visualizer('yelp_review_full')
