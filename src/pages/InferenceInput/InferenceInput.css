@@ -1,33 +1,40 @@
-  .box-style {
+.box-container {
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     background-image: url('../../assets/images/Background.png');
     min-height: 100vh;
     background-size: cover;
-    display: flex;
+    padding-bottom: 5rem;
   }
-
-  .card-style {
+  
+  .card-container {
     min-width: 90%;
     border-radius: 2px;
     padding: 1px;
     margin-top: 10px;
-    padding-bottom: 60px;
     overflow: visible;
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background: white;
+    background: rgb(244, 173, 73);
   }
-
+  
+  .dropdown-pos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
   .align-center {
     display: flex;
     justify-content: center;
     align-items: center;
   }
-
-  .align-buttons {
-    padding-top: 100px;
-    padding-bottom: 100px;
+  
+  .card-content {
+    min-width: 90%;
   }
+  

@@ -21,8 +21,18 @@
     background: white;
   }
 
-  .align-center {
+  /* .align-center {
     display: flex;
     justify-content: center;
     align-items: center;
+  } */
+
+  .align-center {
+    display: flex;
+    justify-content: center;
   }
+  
+  p {
+    margin: 0;
+  }
+  

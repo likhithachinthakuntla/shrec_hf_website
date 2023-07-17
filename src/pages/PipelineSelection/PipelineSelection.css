@@ -1,0 +1,40 @@
+.box-style {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-image: url('../../assets/images/Background.png');
+  min-height: 100vh;
+  background-size: cover;
+  display: flex;
+}
+
+.pipeline-card-style {
+  min-width: 90%;
+  border-radius: 2px;
+  padding: 1px;
+  margin-top: 10px;
+  /* padding-bottom: 60px; */
+  overflow: visible;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: white;
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.align-buttons {
+  padding-top: 20px;
+  padding-bottom:20px;
+}
+
+  /* .bordered-div {
+    border: 1px solid red;
+  } */
+  
+  
+  

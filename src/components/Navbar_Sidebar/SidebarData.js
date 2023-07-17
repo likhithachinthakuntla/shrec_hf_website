@@ -12,7 +12,7 @@ export const SidebarData = [
   },
   {
     title: 'What you want?',
-    path: '/pipeline_selection',
+    path: '/pipelineSelection',
     icon: <GiGears.GiChoice />,
     cName: 'nav-text'
   },
@@ -23,21 +23,33 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Inputs',
+    title: 'Data Analysis Input',
     path: '/userInputs',
     icon: <IoIcons.IoIosPaper />,
     cName: 'nav-text'
   },
   {
-    title: 'ETL',
+    title: 'Data Analysis',
     path: '/etl',
     icon: <GiGears.GiGears />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Training Input',
+    path: '/trainingInput',
+    icon: <IoIcons.IoIosPaper />,
     cName: 'nav-text'
   },
   {
     title: 'Training',
     path: '/training',
     icon: <IoIcons.IoMdPeople />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Inference Input',
+    path: '/inferenceInput',
+    icon: <IoIcons.IoIosPaper />,
     cName: 'nav-text'
   },
   {

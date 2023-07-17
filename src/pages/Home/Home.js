@@ -48,7 +48,7 @@ const Home = () => {
   return (
     <div>
       <div className='box-style'>
-        <div className='card-style'>
+        <div className='home-card-style'>
           <div className='title-container' style={{ minHeight: minHeight }}>
             <div className='project-title'>
               <h1 style={{ fontSize: '36px' }} className='project'>

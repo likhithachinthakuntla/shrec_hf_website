@@ -13,7 +13,7 @@ function Popup(props) {
   const userInputsPage = () => {
     const project_id = uuid();
     window.project_id = project_id;
-    navigate('/pipeline_selection');
+    navigate('/pipelineSelection');
   }
 
   const [inputValue, setInputValue] = useState('');

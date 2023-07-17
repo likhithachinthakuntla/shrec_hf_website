@@ -1,0 +1,39 @@
+.box-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-image: url('../../assets/images/Background.png');
+  min-height: 100vh;
+  background-size: cover;
+  padding-bottom: 5rem;
+}
+
+.card-container {
+  min-width: 90%;
+  border-radius: 2px;
+  padding: 1px;
+  margin-top: 10px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: rgb(244, 173, 73);
+}
+
+.dropdown-pos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-content {
+  min-width: 90%;
+}

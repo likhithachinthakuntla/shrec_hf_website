@@ -67,8 +67,7 @@ function Dashboard() {
   }
 
   const navigateToTrainingPage = () => {
-    //Uncomment below code - once training page is ready
-    navigate('/training');
+    navigate('/trainingInput');
   }
 
   async function getDatasetStats() {
@@ -939,7 +938,7 @@ function Dashboard() {
             </Col>
           </Row>)}
 
-          {window.ETLPipeline && !showPreprocessing && (<Container style={{ marginInlineEnd: '0px', paddingBlockEnd: '50px' }}>
+          {window.E2EPipeline && !showPreprocessing && (<Container style={{ marginInlineEnd: '0px', paddingBlockEnd: '50px' }}>
             <Row>
               <Col
                 sm={12}

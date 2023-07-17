@@ -59,8 +59,20 @@
 import React, { useState } from 'react';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import './Inference.css';
+import { AiOutlineLoading, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
+import TextField from '@mui/material/TextField';
+import { IconButton, Grid } from '@mui/material';
+import { IoIosArrowDropdownCircle, IoIosArrowDropleftCircle } from "react-icons/io";
 
 function Inference() {
+
+    const [isCardLoading, setIsCardLoading] = useState(false);
+    const [cardData, setCardData] = useState({ Name: '--', Size: '--', NumInstances: '--', type: '--' });
+    const [showFeatureImportances, setShowFeatureImportances] = useState(false);
+    const handleClickFeatureImportances = () => {
+        setShowFeatureImportances(!showFeatureImportances);
+    }
+
     const [inputText, setInputText] = useState('');
     const [inferenceResult, setInferenceResult] = useState('');
 
@@ -68,46 +80,228 @@ function Inference() {
         setInputText(event.target.value);
     };
 
+    // const handleButtonClick = () => {
+    //     // Perform inference or any desired action here
+    //     // Update the inferenceResult state with the new data
+    //     setInferenceResult(`Inference result for "${inputText}"`);
+    // };
+
+    const [text, setText] = useState('');
+
+    const handleTextChange = (event) => {
+        setText(event.target.value);
+    };
+
     const handleButtonClick = () => {
-        // Perform inference or any desired action here
-        // Update the inferenceResult state with the new data
-        setInferenceResult(`Inference result for "${inputText}"`);
+        // Perform any action you want with the text
+        console.log(text);
     };
 
     return (
-        <Container fluid className='background2'>
-            <Row>
-                <Col
-                    md='12'
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        color: 'white',
-                        paddingBottom: '20px',
-                    }}
-                >
-                    <div className='align-center'>
-                        <div>
-                            <h1 style={{ paddingBlockEnd: '200px', alignSelf: 'flex-start' }}>Inference Summary</h1>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                                <div style={{ display: 'flex' }}>
-                                    <input
-                                        type="text"
-                                        value={inputText}
-                                        onChange={handleInputChange}
-                                        style={{ marginRight: '10px' }}
-                                    />
-                                    <Button onClick={handleButtonClick}>Submit</Button>
+        <>
+            <Container fluid className='background2'>
+                <Row>
+                    <Col lg='3' sm='6'>
+                        <Card className='card-stats'>
+                            <Card.Body>
+                                <Row>
+                                    <Col xs='5'>
+                                        <div className='icon-big icon-warning'>
+                                            <i className='nc-icon nc-chart text-warning'></i>
+                                        </div>
+                                    </Col>
+                                    <Col xs='7'>
+                                        <div className='numbers'>
+                                            <p className='card-category'></p>
+                                            {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                                                <AiOutlineLoading className="loadingicon" />
+                                                <p style={{ paddingTop: '5px' }}>Loading...</p>
+                                            </div>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.Name}</Card.Title>)}
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                            <Card.Footer>
+                                <hr></hr>
+                                <div className='stats'>
+                                    <i className='fas fa-redo mr-1'></i>
+                                    Dataset
                                 </div>
-                                <p style={{ paddingLeft: '100px', fontSize: '20px', alignSelf: 'flex-end' }}>
-                                    {inferenceResult}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
-        </Container>
+                            </Card.Footer>
+                        </Card>
+                    </Col>
+
+                    {/* --------------------------------------------------------------------------------------------- */}
+
+                    <Col lg='3' sm='6'>
+                        <Card className='card-stats'>
+                            <Card.Body>
+                                <Row>
+                                    <Col xs='5'>
+                                        <div className='icon-big icon-warning'>
+                                            <i className='nc-icon nc-light-3 text-success'></i>
+                                        </div>
+                                    </Col>
+                                    <Col xs='7'>
+                                        <div className='numbers'>
+                                            <p className='card-category'></p>
+                                            {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                                                <AiOutlineLoading className="loadingicon" />
+                                                <p style={{ paddingTop: '5px' }}>Loading...</p>
+                                            </div>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.Size}</Card.Title>)}
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                            <Card.Footer>
+                                <hr></hr>
+                                <div className='stats'>
+                                    <i className='far fa-calendar-alt mr-1'></i>
+                                    Size
+                                </div>
+                            </Card.Footer>
+                        </Card>
+                    </Col>
+
+                    {/* --------------------------------------------------------------------------------------------- */}
+
+                    <Col lg='3' sm='6'>
+                        <Card className='card-stats'>
+                            <Card.Body>
+                                <Row>
+                                    <Col xs='5'>
+                                        <div className='icon-big icon-warning'>
+                                            <i className='nc-icon nc-vector text-danger'></i>
+                                        </div>
+                                    </Col>
+                                    <Col xs='7'>
+                                        <div className='numbers'>
+                                            <p className='card-category'></p>
+                                            {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                                                <AiOutlineLoading className="loadingicon" />
+                                                <p style={{ paddingTop: '5px' }}>Loading...</p>
+                                            </div>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.NumInstances}</Card.Title>)}
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                            <Card.Footer>
+                                <hr></hr>
+                                <div className='stats'>
+                                    <i className='far fa-clock-o mr-1'></i>
+                                    Number of records
+                                </div>
+                            </Card.Footer>
+                        </Card>
+                    </Col>
+                    <Col lg='3' sm='6'>
+                        <Card className='card-stats'>
+                            <Card.Body>
+                                <Row>
+                                    <Col xs='5'>
+                                        <div className='icon-big icon-warning'>
+                                            <i className='nc-icon nc-favourite-28 text-primary'></i>
+                                        </div>
+                                    </Col>
+                                    <Col xs='7'>
+                                        <div className='numbers'>
+                                            <p className='card-category'></p>
+                                            {isCardLoading && (<div className="loadingcontainer" style={{ paddingBlockEnd: '0px' }}>
+                                                <AiOutlineLoading className="loadingicon" />
+                                                <p style={{ paddingTop: '5px' }}>Loading...</p>
+                                            </div>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.type}</Card.Title>)}
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                            <Card.Footer>
+                                <hr></hr>
+                                <div className='stats'>
+                                    <i className='fas fa-redo mr-1'></i>
+                                    Type of classification
+                                </div>
+                            </Card.Footer>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md='12'>
+                        <Card>
+                            <Card.Header>
+                                <Container>
+                                    <Row>
+                                        <Col sm={8}>
+                                            <Card.Title as='h4'>Inference - Hugging Face</Card.Title>
+                                        </Col>
+                                        <Col
+                                            sm={4}
+                                            style={{ display: 'flex', justifyContent: 'right' }}
+                                        >
+                                            <IconButton
+                                                aria-label='Add project'
+                                                size='large'
+                                                style={{ paddingBlockStart: '0px', paddingBlockEnd: '40px' }}
+                                                onClick={handleClickFeatureImportances}
+                                            >
+                                                <div>{!showFeatureImportances && <IoIosArrowDropleftCircle fontSize='inherit' />}</div>
+                                                <div>{showFeatureImportances && <IoIosArrowDropdownCircle fontSize='inherit' />}</div>
+                                            </IconButton>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Card.Header>
+                            {showFeatureImportances && <Card.Body>
+                                {/* <div
+                                    style={{ padding: '0px 0px 0px 20px', width: '100%', height: '100%' }}
+                                >
+                                    <div style={{paddingBottom: "20px"}}>
+                                        <TextField
+                                            id="outlined-multiline-static"
+                                            label="Enter text"
+                                            multiline
+                                            rows={7}
+                                            defaultValue=""
+                                            style={{width: "400px"}}
+                                        />
+                                    </div>
+                                    <div className = 'align-center' style={{width: "400px"}}>
+                                        <Button onClick={handleButtonClick}>Submit</Button>
+                                    </div>
+                                    <p>jhvfjwrbvfkebfvkeb</p>
+                                </div> */}
+                                <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+  <div style={{ padding: '0px 20px 20px 0px' }}>
+    <TextField
+      id="outlined-multiline-static"
+      label="Enter text"
+      multiline
+      rows={7}
+      defaultValue=""
+      style={{ width: '400px' }}
+    />
+  </div>
+  <div style={{ paddingBottom: '20px' }}>
+    <p>
+        Machine learning (ML) inference is the process of running live data points into a machine learning algorithm (or “ML model”) to calculate an output such as a single numerical score. This process is also referred to as “operationalizing an ML model” or “putting an ML model into production.” When an ML model is running in production, it is often then described as artificial intelligence (AI) since it is performing functions similar to human thinking and analysis. Machine learning inference basically entails deploying a software application into a production environment, as the ML model is typically just software code that implements a mathematical algorithm. That algorithm makes calculations based on the characteristics of the data, known as “features” in the ML vernacular.
+    </p>
+  </div>
+</div>
+<div className="align-center" style={{ width: '400px' }}>
+  <Button onClick={handleButtonClick}>Submit</Button>
+</div>
+
+                            </Card.Body>}
+                            <Card.Footer>
+                            </Card.Footer>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+        </>
     );
 }
 

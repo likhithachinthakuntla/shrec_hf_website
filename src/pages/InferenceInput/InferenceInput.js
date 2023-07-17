@@ -12,17 +12,17 @@ import {
 } from '@mui/material';
 import Dropdown from '../../components/Dropdown/dropdown';
 import HFM from '../../assets/images/Flow_Chart.png';
-import './UserInput.css';
+import './InferenceInput.css';
 import { useNavigate } from 'react-router-dom';
 
 const steps = [
-  'Select Dataset',
+  'Select Model',
   'Select Infrastructure',
 ];
 
-const UserInput = () => {
-  const navigate = useNavigate();
-  const [etlData, setEtlData] = useState([]);
+const InferenceInput = () => {
+const navigate = useNavigate();
+const [modelTrainingData, setModelTrainingData] = useState([]);
   const infrastructureData = [
     'Sapphire Rapids CPU',
     'etc...'
@@ -30,7 +30,7 @@ const UserInput = () => {
 
   const ip = Array(2).fill([]);
 
-  ip[0] = Object.values(etlData).map((item) => {
+  ip[0] = Object.values(modelTrainingData).map((item) => {
     return { value: item, label: item };
   });
 
@@ -38,11 +38,13 @@ const UserInput = () => {
     return { value: item, label: item };
   });
 
-  const [isLoadingEtlData, setIsLoadingEtlData] = useState(true);
-  const [selectedEtlData, setSelectedEtlData] = useState({label: '', value:''});
+  const [isLoadingModelTrainingData, setIsLoadingModelTrainingData] = useState(true);
+  const [selectedModelTrainingData, setSelectedModelTrainingData] = useState({label: '', value:''});
   const [selectedInfrastructureData, setSelectedInfrastructureData] = useState({label: '', value:''});
+
   const [activeStep, setActiveStep] = useState(1);
   const [completed, setCompleted] = useState(false);
+
   const [submitClicked, setSubmitClicked] = useState(false);
   const totalSteps = () => {
     return steps.length;
@@ -59,11 +61,14 @@ const UserInput = () => {
         const selectedDropdownList = [];
         selectedDropdownList.push(getSelectedData(0));
         selectedDropdownList.push(getSelectedData(1));
+        // const dropdownArray = selectedDropdownListArray;
+        // dropdownArray.push(selectedDropdownList);
+        // setSelectedDropdownListArray(dropdownArray);
         if(window.dropdownArray == undefined) {
           window.dropdownArray = {};
         }
         window.dropdownArray[window.projectName] = selectedDropdownList;
-        navigate('/etl');
+        navigate('/inference');
       }
     }
     if (submitClicked) {
@@ -74,27 +79,19 @@ const UserInput = () => {
   };
 
   const handleSelectedData = (id, eventData) => {
-    if(id==0) {
-        setSelectedEtlData(eventData);
-        window.dataset_name = eventData.value;
+    if (id==0) {
+        setSelectedModelTrainingData(eventData);
     } else if (id==1) {
       setSelectedInfrastructureData(eventData);
     }
   }
 
   const getSelectedData = (key) => {
-    if(key==0) {
-      return selectedEtlData;
+    if (key==0) {
+      return selectedModelTrainingData;
     } else if (key==1) {
       return selectedInfrastructureData;
     }
-  }
-
-  async function getAllDatasets() {
-    const response = await fetch('/getAllDatasets/');
-    const data = await response.json();
-    setEtlData(data);
-    setIsLoadingEtlData(false);
   }
 
   async function showSubDatasetsForDataset() {
@@ -103,11 +100,15 @@ const UserInput = () => {
     window.subsetData = data;
   }
 
-  useEffect(() => {
-    getAllDatasets();
-  }, [window.projectName]);
+  async function showModelsForDataset() {
+    const response = await fetch(`/showModelsForDataset/?dataset_name=${window.dataset_name}`);
+    const data = await response.json();
+    setModelTrainingData(data);
+    setIsLoadingModelTrainingData(false);
+  }
 
   useEffect(() => {
+    showModelsForDataset();
     showSubDatasetsForDataset();
   }, [window.dataset_name]);
 
@@ -200,7 +201,7 @@ const UserInput = () => {
           mb={4}
         >
           {Object.entries({
-            0: 'Dataset',
+            0: 'Model Training',
             1: 'Infrastructure',
           }).map(([key, value]) => (
             <Grid item key={key} xs={6} marginY={1} className='align-center'>
@@ -228,7 +229,7 @@ const UserInput = () => {
   const renderStep1 = () => {
     return (
       <Grid className='dropdown-pos' marginY={4} ml={4}>
-        <Dropdown placeholder='Dataset' options={ip[0]} id={0} handleSelectedData={handleSelectedData} selectedOption={selectedEtlData} isLoadingData={isLoadingEtlData} />
+          <Dropdown placeholder='Model Training' options={ip[0]} id={0} handleSelectedData={handleSelectedData} selectedOption={selectedModelTrainingData} isLoadingData={isLoadingModelTrainingData} />
       </Grid>
     );
   };
@@ -245,7 +246,7 @@ const UserInput = () => {
     <Box className='box-container'>
       <Card className='card-container'>
         <CardContent className='align-center card-content'>
-          <h1>DATA ANALYSIS INPUTS</h1>
+          <h1>INFERENCE INPUTS</h1>
         </CardContent>
 
         <CardContent className='align-center card-content'>
@@ -262,4 +263,4 @@ const UserInput = () => {
   );
 };
 
-export default UserInput;
+export default InferenceInput;
