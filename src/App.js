@@ -11,6 +11,7 @@ import TrainingInput from './pages/TrainingInput/TrainingInput';
 import './App.css';
 import Inference from './pages/Inference/Inference';
 import InferenceInput from './pages/InferenceInput/InferenceInput';
+import InferenceE2EInput from './pages/InferenceInput/InferenceE2EInput';
 
 class App extends React.Component {
   render() {
@@ -26,6 +27,7 @@ class App extends React.Component {
             <Route path='/etl' element={<Dashboard />} />
             <Route path='/trainingInput' element={<TrainingInput />} />
             <Route path='/training' element={<Training />} />
+            <Route path='/InferenceE2EInput' element={<InferenceE2EInput />} />
             <Route path='/inferenceInput' element={<InferenceInput />} />
             <Route path='/inference' element={<Inference />} />
           </Routes>

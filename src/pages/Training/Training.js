@@ -191,7 +191,7 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 function Training() {
     const navigate = useNavigate();
     function handleInferencePage() {
-        navigate('/inferenceInput');
+        navigate('/InferenceE2EInput');
     }
 
     return (

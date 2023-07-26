@@ -56,7 +56,7 @@
 // export default Inference;
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import './Inference.css';
 import { AiOutlineLoading, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
@@ -66,15 +66,15 @@ import { IoIosArrowDropdownCircle, IoIosArrowDropleftCircle } from "react-icons/
 
 function Inference() {
 
-    const [isCardLoading, setIsCardLoading] = useState(false);
-    const [cardData, setCardData] = useState({ Name: '--', Size: '--', NumInstances: '--', type: '--' });
+    const [isCardLoading, setIsCardLoading] = useState(true);
+    const [cardData, setCardData] = useState({ modelName: '--', inferenceTask: '--', infrastructure: '--', inputType: '--' });
     const [showFeatureImportances, setShowFeatureImportances] = useState(false);
     const handleClickFeatureImportances = () => {
         setShowFeatureImportances(!showFeatureImportances);
     }
 
     const [inputText, setInputText] = useState('');
-    const [inferenceResult, setInferenceResult] = useState('');
+    const [inferenceResult, setInferenceResult] = useState({label: '', score: ''});
 
     const handleInputChange = (event) => {
         setInputText(event.target.value);
@@ -86,16 +86,54 @@ function Inference() {
     //     setInferenceResult(`Inference result for "${inputText}"`);
     // };
 
-    const [text, setText] = useState('');
+    // const [text, setText] = useState('');
 
-    const handleTextChange = (event) => {
-        setText(event.target.value);
-    };
+    // const handleTextChange = (event) => {
+    //     setText(event.target.value);
+    // };
 
     const handleButtonClick = () => {
         // Perform any action you want with the text
-        console.log(text);
+        // console.log(inputText);
+        getPredictions();
     };
+
+    async function getInferStats() {
+        try {
+            const reqUrl = `/getInferStats/?modelID=${window.modelName}`;
+            const response = await fetch(reqUrl);
+            const data = await response.json();
+            // setSelectedSubset(window.subsetData);
+            setCardData(data);
+            // setGraphsRender(true);
+            setIsCardLoading(false);
+          } catch (error) {
+            setCardData({ modelName: '--', inferenceTask: '--', infrastructure: '--', inputType: '--' });
+            setIsCardLoading(false);
+          }
+    }
+
+    useEffect(() => {
+        getInferStats();
+    }, []);
+
+    async function getPredictions() {
+        try {
+            const device_name = "Sapphire Rapids CPU"
+            const reqUrl = `/getPredictions/?modelID=${window.modelName}&device_name=${device_name}&input=${inputText}`;
+            const response = await fetch(reqUrl);
+            const data = await response.json();
+            setInferenceResult(data);
+            debugger;
+            // setSelectedSubset(window.subsetData);
+            // setCardData(data);
+            // setGraphsRender(true);
+            // setIsCardLoading(false);
+          } catch (error) {
+            // setCardData({ modelName: '--', inferenceTask: '--', infrastructure: '--', inputType: '--' });
+            // setIsCardLoading(false);
+          }
+    }
 
     return (
         <>
@@ -117,7 +155,7 @@ function Inference() {
                                                 <AiOutlineLoading className="loadingicon" />
                                                 <p style={{ paddingTop: '5px' }}>Loading...</p>
                                             </div>)}
-                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.Name}</Card.Title>)}
+                                            {!isCardLoading && (<Card.Title as='h3' class="ellipse">{cardData.modelName}</Card.Title>)}
                                         </div>
                                     </Col>
                                 </Row>
@@ -126,7 +164,7 @@ function Inference() {
                                 <hr></hr>
                                 <div className='stats'>
                                     <i className='fas fa-redo mr-1'></i>
-                                    Dataset
+                                    Model name
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -150,7 +188,7 @@ function Inference() {
                                                 <AiOutlineLoading className="loadingicon" />
                                                 <p style={{ paddingTop: '5px' }}>Loading...</p>
                                             </div>)}
-                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.Size}</Card.Title>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.inferenceTask}</Card.Title>)}
                                         </div>
                                     </Col>
                                 </Row>
@@ -159,7 +197,7 @@ function Inference() {
                                 <hr></hr>
                                 <div className='stats'>
                                     <i className='far fa-calendar-alt mr-1'></i>
-                                    Size
+                                    Inference task
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -183,7 +221,7 @@ function Inference() {
                                                 <AiOutlineLoading className="loadingicon" />
                                                 <p style={{ paddingTop: '5px' }}>Loading...</p>
                                             </div>)}
-                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.NumInstances}</Card.Title>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.infrastructure}</Card.Title>)}
                                         </div>
                                     </Col>
                                 </Row>
@@ -192,7 +230,7 @@ function Inference() {
                                 <hr></hr>
                                 <div className='stats'>
                                     <i className='far fa-clock-o mr-1'></i>
-                                    Number of records
+                                    Infrastructure
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -213,7 +251,7 @@ function Inference() {
                                                 <AiOutlineLoading className="loadingicon" />
                                                 <p style={{ paddingTop: '5px' }}>Loading...</p>
                                             </div>)}
-                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.type}</Card.Title>)}
+                                            {!isCardLoading && (<Card.Title as='h3'>{cardData.inputType}</Card.Title>)}
                                         </div>
                                     </Col>
                                 </Row>
@@ -222,7 +260,7 @@ function Inference() {
                                 <hr></hr>
                                 <div className='stats'>
                                     <i className='fas fa-redo mr-1'></i>
-                                    Type of classification
+                                    Input type
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -282,11 +320,17 @@ function Inference() {
       rows={7}
       defaultValue=""
       style={{ width: '400px' }}
+      value={inputText}
+      onChange={handleInputChange}
     />
   </div>
   <div style={{ paddingBottom: '20px' }}>
     <p>
-        Machine learning (ML) inference is the process of running live data points into a machine learning algorithm (or “ML model”) to calculate an output such as a single numerical score. This process is also referred to as “operationalizing an ML model” or “putting an ML model into production.” When an ML model is running in production, it is often then described as artificial intelligence (AI) since it is performing functions similar to human thinking and analysis. Machine learning inference basically entails deploying a software application into a production environment, as the ML model is typically just software code that implements a mathematical algorithm. That algorithm makes calculations based on the characteristics of the data, known as “features” in the ML vernacular.
+        {/* Machine learning (ML) inference is the process of running live data points into a machine learning algorithm (or “ML model”) to calculate an output such as a single numerical score. This process is also referred to as “operationalizing an ML model” or “putting an ML model into production.” When an ML model is running in production, it is often then described as artificial intelligence (AI) since it is performing functions similar to human thinking and analysis. Machine learning inference basically entails deploying a software application into a production environment, as the ML model is typically just software code that implements a mathematical algorithm. That algorithm makes calculations based on the characteristics of the data, known as “features” in the ML vernacular. */}
+        <br/><br/>
+        Label: {inferenceResult.label}
+        <br/><br/>
+        Score: {inferenceResult.score}
     </p>
   </div>
 </div>

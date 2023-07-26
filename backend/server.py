@@ -3,10 +3,12 @@ from flask import Flask, request
 from fetchDatasets import FetchDatasets
 from fetchModels import FetchModels
 from ETL.visualizer import Visualizer
+from Inference.infer import Infer
 app = Flask(__name__)
 fetchDatasets_routes = FetchDatasets('yelp_review_full')
 fetchModels_routes = FetchModels('yelp_review_full', None, logger=None)
 visualizer_routes = Visualizer()
+inference_routes = Infer()
 # fetchDatasets_routes.register_routes()
 # fetchModels_routes.register_routes()
 # app.register_blueprint(fetchDatasets_routes.fetchDatasets)
@@ -67,6 +69,20 @@ def getTopngram():
     project_id = request.args.get('project_id')
     subset_name = request.args.get('subset_name')
     result = visualizer_routes.getTopngram(project_id, subset_name, 2, None)
+    return result
+
+@app.route('/getInferStats/')
+def getInferStats():
+    modelID = request.args.get('modelID')
+    result = inference_routes.get_infer_stats(modelID)
+    return result
+
+@app.route('/getPredictions/')
+def getPredictions():
+    modelID = request.args.get('modelID')
+    device_name = request.args.get('device_name')
+    input = request.args.get('input')
+    result = inference_routes.get_predictions(modelID, device_name, input)
     return result
 
 if __name__ == '__main__':

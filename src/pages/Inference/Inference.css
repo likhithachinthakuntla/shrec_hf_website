@@ -36,3 +36,17 @@
     margin: 0;
   }
   
+  .ellipse {
+    /* width: 200px;
+    height: 100px; */
+    /* border-radius: 50%; */
+    /* background-color: blue; */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* color: white; */
+    /* font-size: 16px; */
+    /* padding: 10px; */
+    font-weight: 200;
+  }
+  
