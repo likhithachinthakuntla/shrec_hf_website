@@ -80,7 +80,8 @@ const [modelTrainingData, setModelTrainingData] = useState([]);
 
   const handleSelectedData = (id, eventData) => {
     if (id==0) {
-        setSelectedModelTrainingData(eventData);
+      window.modelName = eventData.value;
+      setSelectedModelTrainingData(eventData);
     } else if (id==1) {
       setSelectedInfrastructureData(eventData);
     }
@@ -101,9 +102,10 @@ const [modelTrainingData, setModelTrainingData] = useState([]);
   }
 
   async function showModelsForDataset() {
-    const response = await fetch(`/showModelsForDataset/?dataset_name=${window.dataset_name}`);
+    const response = await fetch(`/showModelsForDataset/`);
     const data = await response.json();
-    setModelTrainingData(data);
+    const dataList = data.slice(0,1000);
+    setModelTrainingData(dataList);
     setIsLoadingModelTrainingData(false);
   }
 
