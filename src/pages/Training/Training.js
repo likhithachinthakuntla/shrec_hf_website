@@ -210,7 +210,7 @@ function Training() {
                         <div className='align-center'>
                             <div>
                                 <h1 style={{paddingBlockEnd:"150px", alignSelf: "flex-start"}}>Training Summary</h1>
-                                <p style={{paddingBlockEnd:"100px", paddingLeft:"100px", fontSize: "20px", alignSelf: "flex-end"}}>In progress.....!</p>
+                                <p style={{paddingBlockEnd:"100px", paddingLeft:"40px", fontSize: "20px", alignSelf: "flex-end"}}>Development in progress.....!</p>
                             </div>
                         </div>
                     </Col>
