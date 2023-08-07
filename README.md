@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+# Quick Guide to Run AI IntegAItor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## One-Time Setup:
 
-## Available Scripts
+### FRONTEND SETUP:
 
-In the project directory, you can run:
+1. Download and Install Node.js:
+   - Link to download: [Node.js Download](https://nodejs.org/en/download)
+   - Download the appropriate version for your operating system.
+     ![Node.js Download](images/nodejs-download.png)
+   - After downloading, run the installer.
+     ![Node.js Installer](images/nodejs-install.png)
+   - Verify the installation by opening a terminal and running the command: `node -v`.
+     You should see the latest version of Node.js.
+     ![Node.js Verify Install](images/nodejs-verifyInstall.png)
 
-### `npm start`
+### BACKEND SETUP:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Quickly connect to the VPN using your Dell VPN credentials.
+3. Once connected, you can proceed to the next steps.
+4. Log in to the Dell worker node where the backend Python code is located:
+      ```
+      ssh dell@100.71.242.84
+      ```
+5. After a successful login, you should see the terminal.
+    ![dell loginsuccessful](images/dell-loginsuccessful.png)
+7. Download the following tools to finish the setup:
+      - Python 3.9
+      - Node.js 18.15.0
+      - Anaconda (latest version)
+      - Docker Engine 23.0.5
+      - MongoDB 6.0
+      - Git
+      - rsync
+      - ssh
+## Running the AI IntegAItor Application
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### To Run the Application for the First Time
 
-### `npm test`
+#### 1. Initialize Backend:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Log into Dell server and Create a folder named "shrec-demo" on the Dell server.
+3. Navigate to the folder using the terminal.
+4. Clone the shrec repository code.
+5. Navigate to the backend folder.
+6. Activate the conda virtual environment.
+7. Start the backend server.
+```
+ssh dell@100.71.242.84
+cd shrec-demo/
+git clone git@github.com:abhinavmandala/shrec_hf_website.git
+cd shrec_hf_website/backend/
+conda activate ml-pipeline_env
+python server.py
+```
+9. With the backend server running, you can now make requests from the UI.
+   ![Backend Server Running](images/backend-running.png)
 
-### `npm run build`
+#### 2. Run GUI for the First Time:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Create a folder named "shrec-demo" on the client server.
+2. Open a new terminal and navigate to the folder.
+3. Clone the shrec repository code.
+4. Navigate to the cloned repository.
+5. Run the command to install dependencies.
+6. Start the GUI.
+```
+cd Desktop/shrec-demo/
+git clone git@github.com:abhinavmandala/shrec_hf_website.git
+cd shrec_hf_website/
+npm install --force
+npm start
+```
+7. Open the application in your browser: [http://localhost:3000/](http://localhost:3000/)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### To Run the GUI Application Every Time:
+1. Log into Dell server and Navigate to the backend folder.
+2. Activate the conda virtual environment.
+3. Start the backend server and run `server.py` file.
+```
+ssh dell@100.71.242.84
+cd shrec-demo/shrec_hf_website/backend/
+conda activate ml-pipeline_env
+python server.py
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Go to the project folder on client server.
+2. Run the command to start the GUI: `npm start`
+3. Open the application in your browser: [http://localhost:3000/](http://localhost:3000/)
+   
+   ![Run GUI](images/home-page.png)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
