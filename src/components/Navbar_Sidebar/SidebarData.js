@@ -23,13 +23,13 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Data Analysis Input',
+    title: 'ETL Input',
     path: '/userInputs',
     icon: <IoIcons.IoIosPaper />,
     cName: 'nav-text'
   },
   {
-    title: 'Data Analysis',
+    title: 'ETL',
     path: '/etl',
     icon: <GiGears.GiGears />,
     cName: 'nav-text'

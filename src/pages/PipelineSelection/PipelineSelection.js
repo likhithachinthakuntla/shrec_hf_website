@@ -76,7 +76,7 @@ const PipelineSelection = () => {
                                     (ETL) */}
                                     </IconButton>
                                     <div className='align-center'>
-                                        Data Analysis
+                                        ETL
                                     </div>
                                 </div>
                                 <div style={{ padding: '0px 10px 0px 10px' }}>
