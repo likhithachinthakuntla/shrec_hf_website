@@ -245,7 +245,7 @@ const UserInput = () => {
     <Box className='box-container'>
       <Card className='card-container'>
         <CardContent className='align-center card-content'>
-          <h1>DATA ANALYSIS INPUTS</h1>
+          <h1>ETL INPUTS</h1>
         </CardContent>
 
         <CardContent className='align-center card-content'>
@@ -255,7 +255,7 @@ const UserInput = () => {
 
       <Card className='card-container'>
         <CardContent>
-          <img src={HFM} height='300' width='900' />
+          <img src={HFM} height='500' width='800' />
         </CardContent>
       </Card>
     </Box>

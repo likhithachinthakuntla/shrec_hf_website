@@ -258,7 +258,7 @@ const [modelTrainingData, setModelTrainingData] = useState([]);
 
       <Card className='card-container'>
         <CardContent>
-          <img src={HFM} height='300' width='900' />
+          <img src={HFM} height='500' width='800' />
         </CardContent>
       </Card>
     </Box>
